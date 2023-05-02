@@ -32,61 +32,7 @@ const teacherSchema= mongoose.Schema({
         default:"",
         trim: true
     },
-    //academic_information
-    university_name:{
-        type:String,
-        required:true,
-        minlength:3
-    },
-    academic_major:{
-        type:String,
-        required:true,
-        minlength:3
-    },
-    academic_period:{
-        type:String,
-        required:true,
-        minlength:3
-    },
-    academic_evidence:{
-        type:String,
-        required:true,
-        minlength:3
-    },
-    academic_description:{
-        type:String,
-        default:"",
-        trim: true
-    },
-    academic_status:{
-        type:Boolean,
-        required: true
-    },
-   
-    //degree information
-    degree_name:{
-        type:String,
-        required: true,
-        minlength:3
-    },
-    degree_period:{
-        type:String,
-        required: true,
-        minlength:3
-    },
-    degree_level:{
-        type:String,
-        required: true
-    },
-    degree_evidence:{
-        type:String,
-        required: true,
-        minlength:3
-    },
-    degree_status:{
-        type:Boolean,
-        required: true
-    },
+    
     personal_image:{
         type:String,
         required: true
@@ -104,6 +50,16 @@ const teacherSchema= mongoose.Schema({
     id_course:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course',
+    },
+    id_academic:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Academic',
+        required: true
+    },
+    id_degree:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Degree',
+        required: true
     }
 
 
@@ -119,23 +75,12 @@ function validateTeacher(teacher){
         date_of_birth: Joi.date().required(),
         home_address: Joi.string().min(3).required(),
         personal_description: Joi.string().required(),
-        //academic_information
-        university_name: Joi.string().min(3).required(),
-        academic_major: Joi.string().min(3).required(),
-        academic_period: Joi.string().min(3).required(),
-        academic_evidence: Joi.string().min(3).required(),
-        academic_description: Joi.string().required(),
-        academic_status: Joi.boolean().required(),
-        //degree information
-        degree_name: Joi.string().min(3).required(),
-        degree_period: Joi.string().min(3).required(),
-        degree_level: Joi.string().min(3).required(),
-        degree_evidence: Joi.string().min(3).required(),
-        degree_status: Joi.boolean().required(),
         personal_image: Joi.string().required(),
         id_student_rate: Joi.object().required(),
         id_parent_rate: Joi.object().required(),
-        id_course: Joi.object().required()
+        id_course: Joi.object().required(),
+        id_academic: Joi.object().required(),
+        id_degree: Joi.object().required()
     })
     return schema.validate(teacher)
 }

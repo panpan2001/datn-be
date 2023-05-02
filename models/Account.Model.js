@@ -1,16 +1,17 @@
 const mongoose= require('mongoose')
 const Joi= require('joi')
 
-const accountSchema=mongoose.Schema({
+const accountSchema= mongoose.Schema({
     email: { 
         type: String, 
-        required: true 
+        required: true,
+        unique:true
     },
     password:{
         type: String,
         required: true,
         minlength:6,
-        maxlength:50
+        // maxlength:50
     },
     phone_number:{
         type:String,
@@ -36,8 +37,8 @@ const accountSchema=mongoose.Schema({
 
 function validateAccount(account){
     const schema= Joi.object({
-        password: Joi.string().min(6).max(50).required(),
         email: Joi.string().email().required(),
+        password: Joi.string().min(6).required(),
         phone_number:Joi.string().min(10).max(20).required(),
         role_name: Joi.string().required(),
         is_deleted:Joi.boolean(),
