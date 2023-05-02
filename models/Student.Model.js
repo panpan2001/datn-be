@@ -13,13 +13,27 @@ const studentSchema= mongoose.Schema({
         ref: 'Account',
         required: true,
     },
-    gender:{
-        type: Boolean,
-        required: true,
-    },
     date_of_birth:{
         type: Date,
         required: true
+    },
+    gender:{
+        type: String,
+        required: true,
+    },
+    address:{
+        type: String,
+        minlength:3
+    },
+    parent_name:{
+        type: String,
+        minlength:3
+    },
+    parent_phone_number:{
+        type:String,
+        required:true,
+        minlength:10,
+        maxlength:20
     },
     id_rating_teacher:{
         type: mongoose.Schema.Types.ObjectId,
@@ -34,7 +48,11 @@ function validateStudent(student){
     const schema= Joi.object({
         name: Joi.string().min(3).max(50).required(),
         account_id: Joi.object().required(),
+        date_of_birth: Joi.date().required(),
         gender: Joi.boolean().required(),
+        address: Joi.string().min(3).required(),
+        parent_name: Joi.string().min(3).required(),
+        parent_phone_number: Joi.string().min(10).max(20).required(),
         date_of_birth: Joi.date().required(),
         id_rating_teacher: Joi.object().required()
     })

@@ -2,6 +2,7 @@ const mongoose= require('mongoose')
 const Joi= require('joi')
 
 const teacherSchema= mongoose.Schema({
+    // personal_information
     account_id:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
@@ -14,7 +15,7 @@ const teacherSchema= mongoose.Schema({
         maxlength:50
     },
     gender:{
-        type: Boolean,
+        type: String,
         required: true,
     },
     date_of_birth:{
@@ -24,46 +25,80 @@ const teacherSchema= mongoose.Schema({
     home_address:{
         type: String,
         required:true,
-        minlength:5
+        minlength:3
     },
-    company_address:{
-        type: String,
-        required:true,
-        minlength:5
-    },
-    academic_level:{
-        type:String,
-        required:true
-    },
-    description:{
+    personal_description:{
         type:String,
         default:"",
         trim: true
     },
-    personal_image:{
+    //academic_information
+    university_name:{
+        type:String,
+        required:true,
+        minlength:3
+    },
+    academic_major:{
+        type:String,
+        required:true,
+        minlength:3
+    },
+    academic_period:{
+        type:String,
+        required:true,
+        minlength:3
+    },
+    academic_evidence:{
+        type:String,
+        required:true,
+        minlength:3
+    },
+    academic_description:{
+        type:String,
+        default:"",
+        trim: true
+    },
+    academic_status:{
+        type:Boolean,
+        required: true
+    },
+   
+    //degree information
+    degree_name:{
+        type:String,
+        required: true,
+        minlength:3
+    },
+    degree_period:{
+        type:String,
+        required: true,
+        minlength:3
+    },
+    degree_level:{
         type:String,
         required: true
     },
-    degree_image:{
+    degree_evidence:{
         type:String,
-        required: true
+        required: true,
+        minlength:3
     },
     degree_status:{
         type:Boolean,
         required: true
     },
-    student_rate:{
+    personal_image:{
+        type:String,
+        required: true
+    },
+    id_student_rate:{
         type: mongoose.Schema.Types.ObjectId,
         ref:"StudentRating",
         required: true
     },
-    parent_rate:{
+    id_parent_rate:{
         type: mongoose.Schema.Types.ObjectId,
         ref:"ParentRating",
-        required: true
-    },
-    account_status:{
-        type:Boolean,
         required: true
     },
     id_course:{
@@ -79,19 +114,28 @@ const teacherSchema= mongoose.Schema({
 function validateTeacher(teacher){
     const schema= Joi.object({
         account_id: Joi.object().required(),
-        name: Joi.string().required().min(3).max(50),
-        gender: Joi.boolean().required(),
+        name: Joi.string().min(3).max(50).required(),
+        gender: Joi.string().required(),
         date_of_birth: Joi.date().required(),
-        home_address: Joi.string().required().min(5),
-        company_address: Joi.string().required().min(5),
-        academic_level: Joi.string().required(),
-        description: Joi.string().required().min(5),
-        personal_image: Joi.string().required(),
-        degree_image: Joi.string().required(),
+        home_address: Joi.string().min(3).required(),
+        personal_description: Joi.string().required(),
+        //academic_information
+        university_name: Joi.string().min(3).required(),
+        academic_major: Joi.string().min(3).required(),
+        academic_period: Joi.string().min(3).required(),
+        academic_evidence: Joi.string().min(3).required(),
+        academic_description: Joi.string().required(),
+        academic_status: Joi.boolean().required(),
+        //degree information
+        degree_name: Joi.string().min(3).required(),
+        degree_period: Joi.string().min(3).required(),
+        degree_level: Joi.string().min(3).required(),
+        degree_evidence: Joi.string().min(3).required(),
         degree_status: Joi.boolean().required(),
-        student_rate: Joi.object().required(),
-        parent_rate: Joi.object().required(),
-        account_status: Joi.boolean().required()
+        personal_image: Joi.string().required(),
+        id_student_rate: Joi.object().required(),
+        id_parent_rate: Joi.object().required(),
+        id_course: Joi.object().required()
     })
     return schema.validate(teacher)
 }

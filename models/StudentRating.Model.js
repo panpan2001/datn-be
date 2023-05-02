@@ -48,7 +48,8 @@ const studentRatingSchema= mongoose.Schema({
         max:5
     },
     comment:{
-        type: String
+        type: String,
+        trim: true
     }
 },{
     timestamps: true

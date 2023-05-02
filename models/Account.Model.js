@@ -2,12 +2,9 @@ const mongoose= require('mongoose')
 const Joi= require('joi')
 
 const accountSchema=mongoose.Schema({
-    username:{
-        type: String,
-        required: true,
-        unique: true,
-        minlength:3,
-        maxlength:50
+    email: { 
+        type: String, 
+        required: true 
     },
     password:{
         type: String,
@@ -15,18 +12,14 @@ const accountSchema=mongoose.Schema({
         minlength:6,
         maxlength:50
     },
-    email: { 
-        type: String, 
-        required: true 
-    },
     phone_number:{
-        type:Number,
+        type:String,
         required: true,
         minlength:10,
         maxlength:20
     },
-    role_id:{
-        type: mongoose.Schema.Types.ObjectId,
+    role_name:{
+        type: String,
         ref: 'Role',
         required: true,
     },
@@ -43,11 +36,10 @@ const accountSchema=mongoose.Schema({
 
 function validateAccount(account){
     const schema= Joi.object({
-        username: Joi.string().min(3).max(50).required(),
         password: Joi.string().min(6).max(50).required(),
         email: Joi.string().email().required(),
-        phone_number:Joi.number().min(10).required(),
-        role_id: Joi.required(),
+        phone_number:Joi.string().min(10).max(20).required(),
+        role_name: Joi.string().required(),
         is_deleted:Joi.boolean(),
         avatar:Joi.string()
     })

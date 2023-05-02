@@ -30,7 +30,7 @@ const courseSchema= mongoose.Schema({
         required: true
     },
     schedule:{
-        type: mongoose.Schema.Types.Array,
+        type: [Date],// change ? 
         required: true
     },
     time_per_lesson:{
