@@ -11,9 +11,11 @@ dotenv.config()
 const  app = express();
 
 //create route 
-// const accountRoutes=require('./routes/Account.Route');
+//authentication : login
+//authorization : sign up - role permission 
 const roleRoutes=require('./routes/Role.Route');
-const authorizationRoutes=require('./routes/Auth.Route')
+const authRoutes=require('./routes/Auth.Route')
+const accountRoutes=require('./routes/Account.Route');
 
 //add middleware
 app.use(cors());
@@ -28,7 +30,8 @@ app.use(function(req, res, next) {
 
 //add route
 app.use('/api/roles',roleRoutes)
-app.use('/api/auth',authorizationRoutes)
+app.use('/api/auth',authRoutes)
+app.use('/api/accounts',accountRoutes)
 
 
 db.connect()
@@ -36,8 +39,10 @@ const port= process.env.PORT||8080
 
 app.listen(port,()=>console.log("Port is open at",port))
 
-//authentication : login
-//authorization : sign up - role permission 
+
+
+
+
 
 
 

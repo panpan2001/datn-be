@@ -1,28 +1,20 @@
-let {Account, validate} = require('../models/Account.Model')
+const { json } = require('express');
+let { Account, validate } = require('../models/Account.Model')
 
 
-exports.createAccount = async (req, res, next) => {
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-    let account = new Account({
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-        phone_number: req.body.phone_number,
-        role_id: req.body.role_id,
-        is_deleted: req.body.is_deleted,
-        avatar: req.body.avatar
-    });
-    await account.save();
-    res.send(account);
-}
-
+//get all accounts
 exports.getAccount = async (req, res, next) => {
-    const accounts = await Account.find();
-    res.send(accounts);
+    try {
+        const accounts = await Account.find();
+        res.status(200).json(accounts);
+
+    } catch (error) {
+        res.status(500).json(error);
+    }
 
 }
 
+//get account by id
 exports.getAccountById = async (req, res, next) => {
     const account = await Account.findById(req.params.id);
     res.send(account);
@@ -33,20 +25,28 @@ exports.updateAccount = async (req, res, next) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     const account = await Account.findByIdAndUpdate(req.params.id, {
-        username: req.body.username,
-        password: req.body.password,
+        role_name: req.body.role_name,
+        full_name: req.body.username,
+        date_of_birth: req.body.date_of_birth,
+        gender: req.body.gender,
+        address: req.body.address,
         email: req.body.email,
         phone_number: req.body.phone_number,
-        role_id: req.body.role_id,
+        password: req.body.password,
         is_deleted: req.body.is_deleted,
         avatar: req.body.avatar
     }, { new: true });
-    res.send(account);
+    res.json(account);
 
 }
 
 exports.deleteAccount = async (req, res, next) => {
-    const account = await Account.findByIdAndDelete(req.params.id);
-    if(!account) res.status(404).send("The account doesn't exist")
-    res.send(account);
+    try {
+        const account = await Account.findByIdAndDelete(req.params.id);
+        res.status(200).json(account);
+
+    } catch (error) {
+        res.status(500).json(error);
+ 
+    }
 }

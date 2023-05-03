@@ -2,30 +2,10 @@ const mongoose= require('mongoose')
 const Joi= require('joi')
 
 const teacherSchema= mongoose.Schema({
-    // personal_information
     account_id:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
         required: true,
-    },
-    name:{
-        type: String,
-        required: true,
-        minlength:3,
-        maxlength:50
-    },
-    gender:{
-        type: String,
-        required: true,
-    },
-    date_of_birth:{
-        type: Date,
-        required: true
-    },
-    home_address:{
-        type: String,
-        required:true,
-        minlength:3
     },
     personal_description:{
         type:String,
@@ -70,10 +50,6 @@ const teacherSchema= mongoose.Schema({
 function validateTeacher(teacher){
     const schema= Joi.object({
         account_id: Joi.object().required(),
-        name: Joi.string().min(3).max(50).required(),
-        gender: Joi.string().required(),
-        date_of_birth: Joi.date().required(),
-        home_address: Joi.string().min(3).required(),
         personal_description: Joi.string().required(),
         personal_image: Joi.string().required(),
         id_student_rate: Joi.object().required(),
