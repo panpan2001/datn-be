@@ -7,28 +7,32 @@ const middlewareController = {
         const token = req.headers.token;
         if (token) {
             const accessToken = token.split(' ')[1]
-            jwt.verify(accessToken, process.env.ACCESS_TOKEN,{clockTimestamp: new Date().getTime()}, (err, user) => {
+            jwt.verify(accessToken, process.env.ACCESS_TOKEN, (err, account) => {
                 if (err) {
                     console.log(err)
-                    return res.status(403).send("Forbidden request")
-
+                    return res.status(403).send("Token is invalid")
                 }
-                req.user = user
+                req.account = account
                 next()
             }
             )
         }
         else{
-            res.status(401).json("Unauthorized request")
+            res.status(401).json("Unauthorized verify token request")
         }
     },
 
     verifyTokenAndAdminAuth:(req,res,next)=>{
-        this.verifyToken(req,res,()=>{
-            if(req.user.role_name!=="admin"||!req.user.role_name){
-                return res.status(403).json("Can't delete other user")
+        middlewareController.verifyToken(req,res,()=>{
+            console.log("req.params: ",req.params,typeof(req.params.id))
+            console.log("req.account: ",req.account,typeof(req.account.id))
+            console.log(req.account.id!==req.params.id)
+            if(req.account.id==req.params.id||req.account.role_name=="admin"){
+                next()
+
             }
-            next()
+            else res.status(403).json("Can't delete other user")
+
         })
     }
 }

@@ -2,11 +2,13 @@ const bcrypt = require('bcrypt')
 const { Account } = require('../models/Account.Model')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
+require('cookie-parser')
 const ACCESS_TOKEN = process.env.ACCESS_TOKEN
+const REFRESH_TOKEN = process.env.REFRESH_TOKEN
 
+let refreshTokens = []
 
-
-const authorizationController = {
+const authController = {
     //register
     registerUser: async (req, res) => {
         try {
@@ -44,6 +46,32 @@ const authorizationController = {
             console.log(error)
         }
     },
+
+    //generate access token
+    generateAccessToken: (account) => {
+
+        return jwt.sign(
+            {
+                id: account.id,
+                role_name: account.role_name
+            },
+            ACCESS_TOKEN,
+            { expiresIn: '1d' }
+        );
+    },
+
+    // generate refresh token
+    generateRefreshToken: (account) => {
+        return jwt.sign(
+            {
+                id: account.id,
+                role_name: account.role_name
+            },
+            REFRESH_TOKEN,
+            { expiresIn: '365d' }
+        );
+    },
+
     loginUser: async (req, res) => {
         try {
             console.log(req.body)
@@ -57,16 +85,16 @@ const authorizationController = {
                 res.status(404).send('Invalid password')
             }
             if (account && isMatch) {
-                const accessToken = jwt.sign(
-                    {
-                        id: account.id,
-                        role_name: account.role_name
-                    },
-                    ACCESS_TOKEN,
-                    { expiresIn: '1d' }
-                    );
-                    const {password,...others}= account._doc;
-
+                const accessToken = authController.generateAccessToken(account);
+                const refreshToken = authController.generateRefreshToken(account);
+                refreshTokens.push(refreshToken);
+                res.cookie('refreshToken', refreshToken, {
+                    httpOnly: true,
+                    secure: false,
+                    path: '/',
+                    sameSite: "strict"
+                })
+                const { password, ...others } = account._doc;
                 res.status(200).json({ ...others, accessToken })
 
             }
@@ -74,7 +102,44 @@ const authorizationController = {
             res.status(500).send(error)
             console.log(error)
         }
+    },
+
+    //request refresh token
+    requestRefreshToken: async(req, res) => {
+        // console.log("refreshToken")
+        const refreshToken = req.cookies.refreshToken;
+        // console.log("refreshToken: ",refreshToken)
+        if (!refreshToken) {
+            return res.status(401).json("You're not authenticated")
+        }
+        if (!refreshTokens.includes(refreshToken)) {
+            return res.status(403).json("Refresh token is invalid")
+        }
+        jwt.verify(refreshToken, REFRESH_TOKEN, (err, account) => {
+            if (err) {
+                res.status(403).json("Refresh token is invalid")
+            }
+            refreshTokens=refreshTokens.filter((token)=>token!==refreshToken)
+            //create new access token, refresh token 
+            const newAccessToken = authController.generateAccessToken(account);
+            const newRefreshToken = authController.generateRefreshToken(account);
+            refreshTokens.push(newRefreshToken)
+            res.cookie('refreshToken', newRefreshToken, {
+                httpOnly: true,
+                secure: false,
+                path: '/',
+                sameSite: "strict"
+            })
+            res.status(200).json({ accessToken: newAccessToken })
+        })
+    },
+
+    //log out 
+    logoutUser: async (req, res) => {
+        res.clearCookie('refreshToken');
+        refreshTokens=refreshTokens.filter((token)=>token!==req.cookies.refreshToken)
+        res.status(200).json("User logged out successfully")
     }
 }
 
-module.exports = authorizationController
+module.exports = authController

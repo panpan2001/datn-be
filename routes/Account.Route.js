@@ -5,9 +5,9 @@ const middlewareController = require('../middlewares/middleware.Controller')
 
 router.get('/',middlewareController.verifyToken,AccountController.getAccount)
 
-router.get('/:id',AccountController.getAccountById)
+router.get('/:id',middlewareController.verifyToken,AccountController.getAccountById)
 
-router.put('/:id',AccountController.updateAccount)
+router.put('/:id',middlewareController.verifyTokenAndAdminAuth,AccountController.updateAccount)
 
 router.delete('/:id',middlewareController.verifyTokenAndAdminAuth,AccountController.deleteAccount)
 

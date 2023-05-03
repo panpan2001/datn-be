@@ -43,7 +43,7 @@ exports.updateAccount = async (req, res, next) => {
 exports.deleteAccount = async (req, res, next) => {
     try {
         const account = await Account.findByIdAndDelete(req.params.id);
-        res.status(200).json(account);
+        res.status(200).send("Account deleted").json(account);
 
     } catch (error) {
         res.status(500).json(error);
