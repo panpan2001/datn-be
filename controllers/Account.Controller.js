@@ -7,7 +7,7 @@ exports.getAccount = async (req, res, next) => {
     try {
         const accounts = await Account.find();
         res.status(200).json(accounts);
-
+console.log("get account successfully")
     } catch (error) {
         res.status(500).json(error);
     }

@@ -18,7 +18,7 @@ const middlewareController = {
             )
         }
         else{
-            res.status(401).json("Unauthorized verify token request")
+            return res.status(401).json("Unauthorized verify token request")
         }
     },
 
