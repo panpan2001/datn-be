@@ -2,13 +2,9 @@ const mongoose= require('mongoose')
 const Joi= require('joi')
 
 const ParentRatingSchema= mongoose.Schema({
-    id_parent:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Parent',
-        required: true
-    },
-    id_teacher:{
-        type: mongoose.Schema.Types.ObjectId,
+    
+    name_teacher:{
+        type: mongoose.Schema.Types.String,
         ref: 'Teacher',
         required: true
     },
@@ -50,8 +46,7 @@ const ParentRatingSchema= mongoose.Schema({
 
 function validateParentRating(parentRating){
     const schema= Joi.object({
-        id_parent: Joi.object().required(),
-        id_teacher: Joi.object().required(),
+        name_teacher: Joi.string().required(),
         rating_avg_teacher: Joi.number().min(0).max(5).required(),
         rating_content_1: Joi.number().min(0).max(5).required(),
         rating_content_2: Joi.number().min(0).max(5).required(),

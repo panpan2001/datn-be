@@ -30,7 +30,7 @@ const courseSchema= mongoose.Schema({
         required: true
     },
     schedule:{
-        type: [Date],// change ? 
+        type: [mongoose.Schema.Types.Date],// change ? 
         required: true
     },
     time_per_lesson:{
@@ -57,7 +57,7 @@ function validateCourse(course){
         category_id: Joi.object().required(),
         number_of_student: Joi.number().required(),
         description: Joi.string().min(5).max(50).required(),
-        schedule: Joi.array().required(),
+        schedule: Joi.array().items(Joi.date().required()),
         time_per_lesson: Joi.number().min(45).max(180).required(),
         cost: Joi.number().min(100000).max(5000000).required()
     })

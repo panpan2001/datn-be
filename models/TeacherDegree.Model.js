@@ -21,6 +21,11 @@ const teacherDegreeSchema= mongoose.Schema({
         required: true,
         minlength:3
     },
+    degree_description:{
+        type:String,
+        default:"",
+        minlength:3
+    },
     degree_status:{
         type:Boolean,
         required: true
@@ -35,6 +40,7 @@ function validateTeacherDegree(teacherDegree){
         degree_period: Joi.string().min(3).required(),
         degree_level: Joi.string().min(3).required(),
         degree_evidence: Joi.string().min(3).required(),
+        degree_description: Joi.string().required(),
         degree_status: Joi.boolean().required()
     })
     return schema.validate(teacherDegree)

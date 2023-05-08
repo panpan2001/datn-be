@@ -1,11 +1,12 @@
-let {Role,validate} = require('../models/Role.Model')
+let { Role, validateRole } = require('../models/Role.Model')
 
 exports.createRole = async (req, res, next) => {
-    
-    const { error } = validate(req.body);
+
+    const { error } = validateRole(req.body);
     if (error) {
         console.log("error");
-        return res.status(400).send(error.details[0].message);}
+        return res.status(400).send(error.details[0].message);
+    }
     let role = new Role({
         name: req.body.name,
     });
@@ -13,26 +14,36 @@ exports.createRole = async (req, res, next) => {
     res.send(role);
 }
 exports.getRole = async (req, res, next) => {
-    const roles = await Role.find();
-    res.send(roles);
+   
+        const roles = await Role.find();
+        if(!roles) res.status(404).send("The role doesn't exist")
+        else res.send(roles)
+    
+   
+    // res.status(200).json(roles);
 }
 
 exports.getRoleById = async (req, res, next) => {
     const role = await Role.findById(req.params.id);
-    res.send(role);
+
+    if (!role) res.status(404).send("The role doesn't exist")
+    else res.send(role);
+    // res.status(200).json(role);
 }
 
 exports.updateRole = async (req, res, next) => {
-    const { error } = validate(req.body);
+    const { error } = validateRole(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     const role = await Role.findByIdAndUpdate(req.params.id, {
         name: req.body.name,
-    }, { new: true });
-    res.send(role);
+    },
+     { new: true });
+    if(!role) res.status(404).send("The role doesn't exist")
+    else res.send(role);
 }
 
 exports.deleteRole = async (req, res, next) => {
     const role = await Role.findByIdAndDelete(req.params.id);
-    if(!role) res.status(404).send("The role doesn't exist")
-    res.send(role);
+    if (!role) res.status(404).send("The role doesn't exist")
+    else res.send(role);
 }

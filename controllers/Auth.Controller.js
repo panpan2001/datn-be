@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const { Account } = require('../models/Account.Model')
 const jwt = require('jsonwebtoken')
+const { Role } = require('../models/Role.Model')
 require('dotenv').config()
 require('cookie-parser')
 const ACCESS_TOKEN = process.env.ACCESS_TOKEN
@@ -39,6 +40,8 @@ const authController = {
             })
             //save db
             const account = await newAccount.save()
+            // const role_id= await Role.findOne({name:role_name})
+            // console.log(role_id)
             res.status(200).json(account)
 
         } catch (error) {

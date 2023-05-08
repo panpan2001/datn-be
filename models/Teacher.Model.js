@@ -17,30 +17,30 @@ const teacherSchema= mongoose.Schema({
         type:String,
         required: true
     },
-    id_student_rate:{
+    id_student_rate:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:"StudentRating",
-        required: true
-    },
-    id_parent_rate:{
+        // required: true
+    }],
+    id_parent_rate:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:"ParentRating",
-        required: true
-    },
-    id_course:{
+        // required: true
+    }],
+    id_course:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course',
-    },
-    id_academic:{
+    }],
+    id_academic:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Academic',
         required: true
-    },
-    id_degree:{
+    }],
+    id_degree:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Degree',
         required: true
-    }
+    }]
 
 
 },{
@@ -52,11 +52,11 @@ function validateTeacher(teacher){
         account_id: Joi.object().required(),
         personal_description: Joi.string().required(),
         personal_image: Joi.string().required(),
-        id_student_rate: Joi.object().required(),
-        id_parent_rate: Joi.object().required(),
-        id_course: Joi.object().required(),
-        id_academic: Joi.object().required(),
-        id_degree: Joi.object().required()
+        id_student_rate: Joi.array().items(Joi.object()),
+        id_parent_rate: Joi.array().items(Joi.object()),
+        id_course: Joi.array().items(Joi.object()),
+        id_academic: Joi.array().items(Joi.object().required()),
+        id_degree: Joi.array().items(Joi.object().required())
     })
     return schema.validate(teacher)
 }

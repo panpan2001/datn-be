@@ -20,4 +20,4 @@ function validateRole(role){
 const Role= mongoose.model("Role",roleSchema)
 
 exports.Role=Role
-exports.validate=validateRole
+exports.validateRole=validateRole
