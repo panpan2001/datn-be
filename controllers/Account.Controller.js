@@ -1,31 +1,27 @@
 const { json } = require('express');
-let { Account, validate } = require('../models/Account.Model')
+let { Account, validateAccount } = require('../models/Account.Model')
 
 
 //get all accounts
-exports.getAccount = async (req, res, next) => {
-    try {
-        const accounts = await Account.find();
-        res.status(200).json(accounts);
-console.log("get account successfully")
-    } catch (error) {
-        res.status(500).json(error);
-    }
+exports.getAllAccounts = async (req, res, next) => {
 
+        const accounts = await Account.find();
+        if(!accounts) return res.status(404).send("Accounts not found")
+        else res.status(200).json(accounts);   
 }
 
 //get account by id
 exports.getAccountById = async (req, res, next) => {
     const account = await Account.findById(req.params.id);
-    res.send(account);
+    if(!account) return res.status(404).send("Account not found")
+    else res.send(account);
 }
 
 
 exports.updateAccount = async (req, res, next) => {
-    const { error } = validate(req.body);
+    const { error } = validateAccount(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     const account = await Account.findByIdAndUpdate(req.params.id, {
-        role_name: req.body.role_name,
         full_name: req.body.username,
         date_of_birth: req.body.date_of_birth,
         gender: req.body.gender,
@@ -36,17 +32,15 @@ exports.updateAccount = async (req, res, next) => {
         is_deleted: req.body.is_deleted,
         avatar: req.body.avatar
     }, { new: true });
-    res.json(account);
+    if(!account) return res.status(404).send("Account not found")
+    else res.json(account);
 
 }
 
 exports.deleteAccount = async (req, res, next) => {
-    try {
         const account = await Account.findByIdAndDelete(req.params.id);
-        res.status(200).send("Account deleted").json(account);
+        if(!account) return res.status(404).send("Account not found")
+        else res.status(200).send("Account deleted").json(account);
 
-    } catch (error) {
-        res.status(500).json(error);
- 
-    }
+   
 }

@@ -21,4 +21,4 @@ function validateAdmin(admin){
 
 const Admin= mongoose.model("Admin",adminSchema)
 exports.Admin=Admin
-exports.validate=validateAdmin
+exports.validateAdmin=validateAdmin

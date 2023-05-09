@@ -33,11 +33,18 @@ const parentSchema= mongoose.Schema({
         minlength:3,
         maxlength:50
     },
-    id_student:{
+    id_student:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:"Student",
-        required:true
-    }
+        required:true,
+
+    }],
+    id_rating_teacher:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'ParentRating',
+        required:true,
+
+    }]
 
 },{
     timestamps: true
@@ -51,11 +58,12 @@ function validateParent(parent){
         email: Joi.string().email().required(),
         address: Joi.string().min(3).required(),
         child_name: Joi.string().min(3).max(50).required(),
-        id_student: Joi.object().required()
+        id_student: Joi.array().items(Joi.object().required()),
+        id_rating_teacher: Joi.array().items(Joi.object().required())
     })
     return schema.validate(parent)
 }
 
 const Parent= mongoose.model("Parent",parentSchema)
 exports.Parent = Parent
-exports.validate= validateParent
+exports.validateParent= validateParent

@@ -1,13 +1,7 @@
 const mongoose= require('mongoose')
-const Joi= require('joi')
-
+const Joi = require('@hapi/joi')
+Joi.objectId = require('joi-objectid')(Joi)
 const studentSchema= mongoose.Schema({
-    name:{
-        type: String,
-        required: true,
-        minlength:3,
-        maxlength:50
-    },
     account_id:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
@@ -23,23 +17,20 @@ const studentSchema= mongoose.Schema({
         minlength:10,
         maxlength:20
     },
-    id_rating_teacher:{
+    id_rating_teacher:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:"StudentRating",
-        require:true
-    }
+    }]
 },{
     timestamps: true
 })
 
 function validateStudent(student){
     const schema= Joi.object({
-        name: Joi.string().min(3).max(50).required(),
-        account_id: Joi.object().required(),
+        account_id: Joi.objectId().required(),
         parent_name: Joi.string().min(3).required(),
         parent_phone_number: Joi.string().min(10).max(20).required(),
-        date_of_birth: Joi.date().required(),
-        id_rating_teacher: Joi.object().required()
+        id_rating_teacher: Joi.array().items(Joi.objectId())
     })
     return schema.validate(student)
 }
@@ -47,4 +38,4 @@ function validateStudent(student){
 const Student= mongoose.model("Student",studentSchema);
 
 exports.Student=Student;
-exports.validate=validateStudent
+exports.validateStudent=validateStudent
