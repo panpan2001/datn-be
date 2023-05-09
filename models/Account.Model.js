@@ -71,4 +71,4 @@ function validateAccount(account){
 
 const Account= mongoose.model("Account",accountSchema)
 exports.Account = Account
-exports.validate= validateAccount
+exports.validateAccount= validateAccount

@@ -1,9 +1,9 @@
 const { json } = require('express');
-let { Account, validate } = require('../models/Account.Model')
+let { Account, validateAccount } = require('../models/Account.Model')
 
 
 //get all accounts
-exports.getAccount = async (req, res, next) => {
+exports.getAllAccounts = async (req, res, next) => {
 
         const accounts = await Account.find();
         if(!accounts) return res.status(404).send("Accounts not found")
@@ -19,7 +19,7 @@ exports.getAccountById = async (req, res, next) => {
 
 
 exports.updateAccount = async (req, res, next) => {
-    const { error } = validate(req.body);
+    const { error } = validateAccount(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     const account = await Account.findByIdAndUpdate(req.params.id, {
         full_name: req.body.username,

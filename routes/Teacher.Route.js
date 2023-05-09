@@ -3,7 +3,7 @@ const router = express.Router()
 const TeacherController= require('../controllers/Teacher.Controller')
 const middlewareController = require('../middlewares/middleware.Controller')
 
-router.get('/',TeacherController.getTeacher)
+router.get('/',TeacherController.getAllTeachers)
 
 router.get('/:id',TeacherController.getTeacherById)
 

@@ -46,4 +46,4 @@ function validateStudent(student){
 const Student= mongoose.model("Student",studentSchema);
 
 exports.Student=Student;
-exports.validate=validateStudent
+exports.validateStudent=validateStudent

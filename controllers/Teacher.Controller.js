@@ -30,7 +30,7 @@ exports.createTeacher = async (req, res, next) => {
 }
 }
 
-exports.getTeacher = async (req, res, next) => {
+exports.getAllTeachers = async (req, res, next) => {
  
         const teachers = await Teacher.find();
         if(!teachers) res.status(404).send("The teacher doesn't exist")

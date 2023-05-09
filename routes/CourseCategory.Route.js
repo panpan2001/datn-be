@@ -3,7 +3,7 @@ const router = express.Router()
 const CourseCategortController= require('../controllers/CourseCategory.Controller')
 const middlewareController = require('../middlewares/middleware.Controller')
 
-router.get('/',CourseCategortController.getCourseCategory)
+router.get('/',CourseCategortController.getAllCourseCategories)
 
 router.get('/:id',CourseCategortController.getCourseCategoryById)
 

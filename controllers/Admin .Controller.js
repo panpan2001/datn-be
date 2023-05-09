@@ -8,7 +8,7 @@ exports.createAdmin = async (req, res, next) => {
     if (!account_id) return res.status(404).send("The account doesn't exist");
     else {
         const admin = new Admin({
-            account_id: account_id,
+            account_id: req.body.account_id,
         });
         await admin.save();
         res.send(admin);
@@ -16,7 +16,7 @@ exports.createAdmin = async (req, res, next) => {
 
 }
 
-exports.getAdmin = async (req, res, next) => {
+exports.getAllAdmins = async (req, res, next) => {
 
     const admins = await Admin.find();
     if (!admins) res.status(404).send("Can't find admin")

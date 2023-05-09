@@ -67,4 +67,4 @@ function validateCourse(course){
 const Course= mongoose.model('Course', courseSchema)
 
 exports.Course= Course
-exports.validate= validateCourse
+exports.validateCourse= validateCourse

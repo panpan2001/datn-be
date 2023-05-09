@@ -48,4 +48,4 @@ function validateTeacherDegree(teacherDegree){
 
 const TeacherDegree= mongoose.model("TeacherDegree",teacherDegreeSchema)
 exports.TeacherDegree = TeacherDegree
-exports.validate= validateTeacherDegree
+exports.validateTeacherDegree= validateTeacherDegree

@@ -13,7 +13,7 @@ exports.createRole = async (req, res, next) => {
     await role.save();
     res.send(role);
 }
-exports.getRole = async (req, res, next) => {
+exports.getAllRoles = async (req, res, next) => {
    
         const roles = await Role.find();
         if(!roles) res.status(404).send("The role doesn't exist")

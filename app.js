@@ -16,11 +16,17 @@ const  app = express();
 const roleRoutes=require('./routes/Role.Route');
 const authRoutes=require('./routes/Auth.Route')
 const accountRoutes=require('./routes/Account.Route');
+const adminRoutes=require('./routes/Admin.Route');
 const teacherRoutes=require('./routes/Teacher.Route');
 const parentRoutes=require('./routes/Parent.Route');
 const courseCategoryRoutes=require('./routes/CourseCategory.Route');
 const teacherAcademicRoutes=require('./routes/TeacherAcademic.Route');
-const TeacherDegreeRoutes=require('./routes/TeacherDegree.Route');
+const teacherDegreeRoutes=require('./routes/TeacherDegree.Route');
+const studentRoutes=require('./routes/Student.Route');
+const courseRoutes=require('./routes/Course.Route');
+const courseStudentRoutes=require('./routes/CourseStudent.Route');
+const studentRatingRoutes=require('./routes/StudentRating.Route');
+const parentRatingRoutes=require('./routes/ParentRating.Routes');
 
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -44,11 +50,18 @@ app.use(function(req, res, next) {
 app.use('/api/roles',roleRoutes)
 app.use('/api/auth',authRoutes)
 app.use('/api/accounts',accountRoutes)
+app.use('/api/admins',adminRoutes)
 app.use('/api/teachers',teacherRoutes)
 app.use('/api/parents',parentRoutes)
 app.use('/api/courseCategories',courseCategoryRoutes)
 app.use('/api/teacherAcademics',teacherAcademicRoutes)
-app.use('/api/teacherDegrees',TeacherDegreeRoutes)
+app.use('/api/teacherDegrees',teacherDegreeRoutes)
+app.use('/api/students',studentRoutes)
+app.use('/api/courses',courseRoutes)
+app.use('/api/courseStudents',courseStudentRoutes)
+app.use('/api/studentRatings',studentRatingRoutes)
+app.use('/api/parentRatings',parentRatingRoutes)
+
 
 db.connect()
 const port= process.env.PORT||8080

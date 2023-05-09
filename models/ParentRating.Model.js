@@ -59,4 +59,4 @@ function validateParentRating(parentRating){
 const ParentRating= mongoose.model("ParentRating",ParentRatingSchema)
 
 exports.ParentRating = ParentRating
-exports.validate= validateParentRating
+exports.validateParentRating= validateParentRating

@@ -20,7 +20,7 @@ exports.createCourseCategory = async (req, res, next) => {
    
 }
 
-exports.getCourseCategory = async (req, res, next) => {
+exports.getAllCourseCategories = async (req, res, next) => {
  
         const courseCategories = await CourseCategory.find();
         if (!courseCategories) res.status(404).send("Can't find course category")

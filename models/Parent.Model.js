@@ -66,4 +66,4 @@ function validateParent(parent){
 
 const Parent= mongoose.model("Parent",parentSchema)
 exports.Parent = Parent
-exports.validate= validateParent
+exports.validateParent= validateParent

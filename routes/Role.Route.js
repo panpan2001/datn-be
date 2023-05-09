@@ -3,7 +3,7 @@ const router = express.Router()
 const RoleController= require('../controllers/Role.Controller')
 const middlewareController = require('../middlewares/middleware.Controller')
 
-router.get('/',RoleController.getRole)
+router.get('/',RoleController.getAllRoles)
 
 router.get('/:id',RoleController.getRoleById)
 
