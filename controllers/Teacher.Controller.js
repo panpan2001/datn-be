@@ -32,7 +32,12 @@ exports.createTeacher = async (req, res, next) => {
 
 exports.getAllTeachers = async (req, res, next) => {
  
-        const teachers = await Teacher.find();
+        const teacherAccounts = await Account.find({role_name: "teacher"});
+        const teacherInfo= await Teacher.find().select('account_id')
+        console.log(teacherAccounts[1])
+        console.log(teacherInfo[1])
+        // const TeacherAcademic= await TeacherAcademic.find({account_id: teachersAccount[0]._id})
+        const teachers={...teacherAccounts,...teacherInfo}
         if(!teachers) res.status(404).send("The teacher doesn't exist")
         else res.status(200).json(teachers);
    
@@ -40,7 +45,12 @@ exports.getAllTeachers = async (req, res, next) => {
 
 exports.getTeacherById = async (req, res, next) => {
 
-        const teacher = await Teacher.findById(req.params.id);
+    const teacherAccount = await Account.findOne({role_name: "teacher"});
+    console.log(teacherAccount)
+    const teacherInfo= await Teacher.findOne({account_id: teacherAccount[0].id})
+    console.log(teacherInfo)
+    // const TeacherAcademic= await TeacherAcademic.find({account_id: teachersAccount[0]._id})
+    const teacher={...teacherAccount,...teacherInfo}
         if(!teacher) res.status(404).send("The teacher doesn't exist")
         else res.send(teacher);
   

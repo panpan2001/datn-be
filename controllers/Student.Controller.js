@@ -4,8 +4,12 @@ const { validateStudent, Student } = require("../models/Student.Model")
 
 exports.createStudent=async(req,res,next)=>{
      const {error}= validateStudent(req.body)
-     if(error) return res.status(400).send(error.details[0].message)
+    if(error) {
+        console.log("req.body",req.body)
+        return res.status(400).send(error.details[0].message)}
+    
      const account_id= await Account.findById(req.body.account_id)
+     console.log(account_id)
      if(!account_id) return res.status(400).send("Account doesn't exist")
      else {
         const student=new Student({
@@ -22,15 +26,42 @@ exports.createStudent=async(req,res,next)=>{
 }
 
 exports.getAllStudents=async(req,res,next)=>{
-    const students=await Student.find()
+  
+    const students= await Student.find().populate('account_id')
     if(!students) res.status(404).send("The student doesn't exist")
     else res.send(students)
 }
 
  exports.getStudentById=async(req,res,next)=>{
-     const student=await Student.findById(req.params.id)
+
+  
+    const student= await Student.findById(req.params.id).populate('account_id')
+    console.log("student: ",req.body.id)
+     console.log("student: ",student)
+
      if(!student) res.status(404).send("The student doesn't exist")
      else res.send(student)
+ }
+
+ exports.getStudentByAccountId=async(req,res,next)=>{
+    console.log(req.params)
+    const account_id= await Account.findById(req.params.id)
+    console.log("account id: ",account_id)
+    let  student= await Student.findOne({account_id:account_id}).populate('account_id')
+    // student= await Account.aggregate([
+    //     {
+    //         $lookup:{
+    //             from:"Student",
+    //             localField:"_id",
+    //             foreignField:"account_id",
+    //             as:"student"
+    //         }
+    //     }
+    // ])
+    console.log("student: ",student)
+
+    if(!student) res.status(404).send("The student doesn't exist")
+    else res.send(student)
  }
 
  exports.updateStudent=async(req,res,next)=>{
