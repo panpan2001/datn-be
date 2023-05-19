@@ -7,7 +7,7 @@ router.get('/',CourseCategortController.getAllCourseCategories)
 
 router.get('/:id',CourseCategortController.getCourseCategoryById)
 
-router.post('/',middlewareController.verifyTokenAndAdminAuth,CourseCategortController.createCourseCategory)
+router.post('/',CourseCategortController.createCourseCategory)
 
 router.put('/:id',middlewareController.verifyTokenAndAdminAuth,CourseCategortController.updateCourseCategory)
 

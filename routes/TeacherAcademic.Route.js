@@ -7,7 +7,7 @@ router.get('/',TeacherAcademicController.getTeacherAcademic)
 
 router.get('/:id',TeacherAcademicController.getTeacherAcademicById)
 
-router.post('/',middlewareController.verifyTokenAndAdminAuth,TeacherAcademicController.createTeacherAcademic)
+router.post('/',TeacherAcademicController.createTeacherAcademic)
 
 router.put('/:id',middlewareController.verifyTokenAndAdminAuth,TeacherAcademicController.updateTeacherAcademic)
 

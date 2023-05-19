@@ -1,12 +1,8 @@
 const mongoose= require('mongoose')
-const Joi= require('joi')
+const Joi= require('@hapi/joi')
+Joi.objectId = require('joi-objectid')(Joi)
 
 const courseSchema= mongoose.Schema({
-    id_teacher:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Teacher',
-        required: true
-    },
     name:{
         type: String,
         required: true,
@@ -52,9 +48,8 @@ const courseSchema= mongoose.Schema({
 
 function validateCourse(course){
     const schema= Joi.object({
-        id_teacher: Joi.object().required(),
         name: Joi.string().min(3).max(50).required(),
-        category_id: Joi.object().required(),
+        category_id: Joi.objectId().required(),
         number_of_student: Joi.number().required(),
         description: Joi.string().min(5).max(50).required(),
         schedule: Joi.array().items(Joi.date().required()),

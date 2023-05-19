@@ -32,29 +32,28 @@ exports.createTeacher = async (req, res, next) => {
 
 exports.getAllTeachers = async (req, res, next) => {
  
-        const teacherAccounts = await Account.find({role_name: "teacher"});
-        const teacherInfo= await Teacher.find().select('account_id')
-        console.log(teacherAccounts[1])
-        console.log(teacherInfo[1])
-        // const TeacherAcademic= await TeacherAcademic.find({account_id: teachersAccount[0]._id})
-        const teachers={...teacherAccounts,...teacherInfo}
+        const teachers= await Teacher.find().populate('account_id',)
         if(!teachers) res.status(404).send("The teacher doesn't exist")
         else res.status(200).json(teachers);
-   
+       
 }
 
 exports.getTeacherById = async (req, res, next) => {
-
-    const teacherAccount = await Account.findOne({role_name: "teacher"});
-    console.log(teacherAccount)
-    const teacherInfo= await Teacher.findOne({account_id: teacherAccount[0].id})
-    console.log(teacherInfo)
-    // const TeacherAcademic= await TeacherAcademic.find({account_id: teachersAccount[0]._id})
-    const teacher={...teacherAccount,...teacherInfo}
+// id teacher not account
+    const teacher  = await Teacher.findById(req.params.id,{
+        createdAt:0,
+        updatedAt:0,
+        __v:0
+    }).populate('account_id',{
+        createdAt:0,
+        updatedAt:0,
+        __v:0
+    })
         if(!teacher) res.status(404).send("The teacher doesn't exist")
         else res.send(teacher);
   
 }
+
 
 exports.updateTeacher = async (req, res, next) => {
     const { error } = validateTeacher(req.body);

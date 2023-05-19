@@ -29,6 +29,7 @@ const teacherAcademicSchema= mongoose.Schema({
     },
     academic_status:{
         type:String,
+        default:false,
         required: true
     },
    

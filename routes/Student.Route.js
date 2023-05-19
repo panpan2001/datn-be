@@ -9,7 +9,7 @@ router.get('/account/:id',StudentController.getStudentByAccountId)//for student 
 // router.get('/checkaccount/:id',StudentController.getStudentByAccountId)
 router.get('/:id',StudentController.getStudentById)//for all can get student id 
 
-router.post('/:id',middlewareController.verifyTokenAndAdminAuth,StudentController.createStudent)
+router.post('/:id',StudentController.createStudent)
 
 router.put('/:id',middlewareController.verifyTokenAndAdminAuth,StudentController.updateStudent)
 
