@@ -4,3 +4,5 @@ teacher check: pannguyen2001@gmail.com - 123456
 nhat.pham.novasquare@gmail.com - 123456
 
 student check : phamnhikhau@gmail.com - 123456 
+
+git commit nhanh error 
