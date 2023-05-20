@@ -71,7 +71,16 @@ exports.getStudentByAccountId = async (req, res, next) => {
     console.log(req.params)
     const account_id = await Account.findById(req.params.id)
     console.log("account id: ", account_id)
-    let student = await Student.findOne({ account_id: account_id }).populate('account_id')
+    let student = await Student.findOne({ account_id: account_id },{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+    })
+    .populate('account_id',{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+    })
     // student= await Account.aggregate([
     //     {
     //         $lookup:{

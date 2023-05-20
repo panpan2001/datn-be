@@ -36,7 +36,7 @@ const teacherSchema= mongoose.Schema({
     // [
         {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Academic',
+        ref: 'TeacherAcademic',
         required: true,
         default:[]
      }
@@ -46,7 +46,7 @@ const teacherSchema= mongoose.Schema({
     // [
         {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Degree',
+        ref: 'TeacherDegree',
         required: true
     }
 // ]

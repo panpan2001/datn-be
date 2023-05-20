@@ -7,6 +7,8 @@ router.get('/',TeacherController.getAllTeachers)
 
 router.get('/:id',TeacherController.getTeacherById)
 
+router.get('/account/:id',TeacherController.getTeacherByAccountId)
+
 router.post('/',TeacherController.createTeacher)
 
 router.put('/:id',middlewareController.verifyTokenAndAdminAuth,TeacherController.updateTeacher)
