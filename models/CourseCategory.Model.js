@@ -2,11 +2,11 @@ const mongoose= require('mongoose')
 const Joi= require('joi')
 
 const courseCategorySchema= mongoose.Schema({
-    id_course:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course',
-        required: true
-    }],
+    // id_course:[{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Course',
+    //     required: true
+    // }],
     type:{
         type:String,
         required:true,
@@ -28,10 +28,10 @@ const courseCategorySchema= mongoose.Schema({
 
 function validateCourseCategory(courseCategory){
     const schema= Joi.object({
-        id_course: Joi.array().items(Joi.object().required()),
+        // id_course: Joi.array().items(Joi.object().required()),
         type: Joi.string().min(3).max(50).required(),
         level: Joi.string().min(3).max(50).required(),
-        description: Joi.string().min(5).max(50)
+        description: Joi.string().min(5)
     })
     return schema.validate(courseCategory)
 }

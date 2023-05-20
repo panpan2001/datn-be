@@ -4,11 +4,11 @@ exports.createCourseCategory = async (req, res, next) => {
   
         const { error } = validateCourseCategory(req.body);
         if (error) return res.status(400).send(error.details[0].message);
-        const id_course = await CourseCategory.findById(req.body.id_course);
-        if (!id_course) return res.status(404).send("The course doesn't exist")
-        else {
+        // const id_course = await CourseCategory.findById(req.body.id_course);
+        // if (!id_course) return res.status(404).send("The course doesn't exist")
+        // else {
             const courseCategory = new CourseCategory({
-                id_course: req.body.id_course,//
+                // id_course: req.body.id_course,
                 type: req.body.type,
                 level: req.body.level,
                 description: req.body.description
@@ -16,7 +16,7 @@ exports.createCourseCategory = async (req, res, next) => {
             });
             await courseCategory.save();
             res.send(courseCategory);
-        }
+        // }
    
 }
 
@@ -40,7 +40,7 @@ exports.updateCourseCategory = async (req, res, next) => {
         if (error) return res.status(400).send(error.details[0].message);
         else {
             const courseCategory = await CourseCategory.findByIdAndUpdate(req.params.id, {
-                id_course: req.body.id_course,
+                // id_course: req.body.id_course,
                 type: req.body.type,
                 level: req.body.level,
                 description: req.body.description

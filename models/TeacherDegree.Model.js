@@ -28,6 +28,7 @@ const teacherDegreeSchema= mongoose.Schema({
     },
     degree_status:{
         type:Boolean,
+        default:false,
         required: true
     },
 },{

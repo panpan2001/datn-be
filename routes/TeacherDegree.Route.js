@@ -7,7 +7,7 @@ router.get('/',TeacherDegreeController.getTeacherDegree)
 
 router.get('/:id',TeacherDegreeController.getTeacherDegreeById)
 
-router.post('/',middlewareController.verifyTokenAndAdminAuth,TeacherDegreeController.createTeacherDegree)
+router.post('/',TeacherDegreeController.createTeacherDegree)
 
 router.put('/:id',middlewareController.verifyTokenAndAdminAuth,TeacherDegreeController.updateTeacherDegree)
 
