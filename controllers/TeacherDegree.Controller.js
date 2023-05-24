@@ -14,6 +14,7 @@ exports.createTeacherDegree=async(req,res,next)=>{
         degree_status:req.body.degree_status
     });
     await teacherDegree.save();
+    console.log("create teacherDegree",teacherDegree);
     res.send(teacherDegree);
 
 }

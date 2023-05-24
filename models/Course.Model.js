@@ -40,8 +40,12 @@ const courseSchema= mongoose.Schema({
         required:true,
         min:100000,
         max:5000000
+    },
+    image:{
+        type:String,
+        default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMV97UpeAbbPPiPpJz8iFsmgeusjg_pVfTscc75Hm18KTA6np6O7Tro2YAaooQDdqq_zk&usqp=CAU"
     }
-
+   
 },{
     timestamps: true
 })
@@ -54,7 +58,7 @@ function validateCourse(course){
         description: Joi.string().min(5).max(50).required(),
         schedule: Joi.array().items(Joi.date().required()),
         time_per_lesson: Joi.number().min(45).max(180).required(),
-        cost: Joi.number().min(100000).max(5000000).required()
+        cost: Joi.number().min(100000).max(5000000).required(),
     })
     return schema.validate(course)
 }

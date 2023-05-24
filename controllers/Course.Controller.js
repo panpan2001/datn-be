@@ -18,6 +18,7 @@ exports.createCourse = async (req, res, next) => {
             schedule: req.body.schedule,
             time_per_lesson: req.body.time_per_lesson,
             cost: req.body.cost,
+            image: req.body.image
         });
         await course.save();
         res.send(course);
@@ -26,7 +27,7 @@ exports.createCourse = async (req, res, next) => {
 
 exports.getAllCourses = async (req, res, next) => {
     
-    const courses = await Course.find();
+    const courses = await Course.find().populate('category_id');
     if(!courses) res.status(404).send("The course doesn't exist")
     else res.send(courses);
 
@@ -34,7 +35,7 @@ exports.getAllCourses = async (req, res, next) => {
 
 exports.getCourseById = async (req, res, next) => {
     
-    const course = await Course.findById(req.params.id);
+    const course = await Course.findById(req.params.id).populate('category_id');
     if (!course) res.status(404).send("The course doesn't exist")
     else res.send(course);
 }
@@ -51,6 +52,7 @@ exports.updateCourse = async (req, res, next) => {
         schedule: req.body.schedule,
         time_per_lesson: req.body.time_per_lesson,
         cost: req.body.cost,
+        image: req.body.image
     },
      { new: true });
     if(!course) res.status(404).send("The course doesn't exist")

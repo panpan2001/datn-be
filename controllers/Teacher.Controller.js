@@ -8,10 +8,8 @@ const { TeacherDegree } = require('../models/TeacherDegree.Model')
 const cloudinary = require('cloudinary').v2;
 
 exports.createTeacher = async (req, res, next) => {
-    const personal_image= req.file
     const { error } = validateTeacher(req.body);
     if (error) {
-        if(personal_image) cloudinary.uploader.destroy(personal_image.fieldname)
         console.log("error",error);
         return res.status(400).send(error.details[0].message);
     }
@@ -32,8 +30,9 @@ exports.createTeacher = async (req, res, next) => {
         await teacher.save();
         res.status(200).json(teacher);
     }
-    // res.status(200).json(personal_image);
 }
+
+
 
 exports.getAllTeachers = async (req, res, next) => {
 

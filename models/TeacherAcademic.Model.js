@@ -28,7 +28,7 @@ const teacherAcademicSchema= mongoose.Schema({
         trim: true
     },
     academic_status:{
-        type:String,
+        type:Boolean,
         default:false,
         required: true
     },
@@ -44,7 +44,7 @@ function validateTeacherAcademic(teacherAcademic){
         academic_period: Joi.string().min(3).required(),
         academic_evidence: Joi.string().min(3).required(),
         academic_description: Joi.string().required(),
-        academic_status: Joi.string().required()
+        academic_status: Joi.boolean().required()
     })
     return schema.validate(teacherAcademic)
 }

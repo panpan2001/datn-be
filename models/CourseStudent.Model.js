@@ -12,6 +12,8 @@ const courseStudentSchema= mongoose.Schema({
         ref: 'Course',
         required: true
     }]
+},{
+    timestamps: true
 })
 
 function validateCourseStudent(courseStudent){

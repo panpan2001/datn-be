@@ -14,6 +14,7 @@ exports.createTeacherAcademic = async (req, res, next) => {
             academic_status: req.body.academic_status
 
         });
+        console.log("create teacherAcademic",teacherAcademic)
         await teacherAcademic.save();
         res.send(teacherAcademic);
   

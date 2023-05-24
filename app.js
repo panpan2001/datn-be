@@ -63,6 +63,7 @@ app.use('/api/studentRatings',studentRatingRoutes)
 app.use('/api/parentRatings',parentRatingRoutes)
 
 
+
 db.connect()
 const port= process.env.PORT||8080
 

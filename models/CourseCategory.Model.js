@@ -23,7 +23,11 @@ const courseCategorySchema= mongoose.Schema({
         type:String,
         default:"",
         minlength:5
-    }
+    },
+    
+
+},{
+    timestamps: true
 })
 
 function validateCourseCategory(courseCategory){
