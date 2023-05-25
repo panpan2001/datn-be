@@ -13,11 +13,11 @@ exports.createTeacher = async (req, res, next) => {
         console.log("error",error);
         return res.status(400).send(error.details[0].message);
     }
-    const account_id = await Account.findById(req.params.account_id);
+    const account_id = await Account.findById(req.body.account_id);
     if (!account_id) res.status(400).send("Account doesn't exist")
     else {
         const teacher = new Teacher({
-            account_id: account_id,
+            account_id: account_id._id,
             personal_description: req.body.personal_description,
             personal_image: req.body.personal_image,
             // personal_image: personal_image.path,
@@ -28,6 +28,7 @@ exports.createTeacher = async (req, res, next) => {
             id_degree: req.body.id_degree
         })
         await teacher.save();
+        console.log("create teacher: ",teacher)
         res.status(200).json(teacher);
     }
 }

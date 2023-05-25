@@ -10,7 +10,7 @@ router.get('/:id',TeacherController.getTeacherById)
 
 router.get('/account/:id',TeacherController.getTeacherByAccountId)
 
-router.post('/',uploadCloud.single('image'),TeacherController.createTeacher)
+router.post('/',TeacherController.createTeacher)
 
 router.put('/:id',middlewareController.verifyTokenAndAdminAuth,TeacherController.updateTeacher)
 
@@ -18,3 +18,5 @@ router.delete('/:id',middlewareController.verifyTokenAndAdminAuth,TeacherControl
 
 
 module.exports = router
+
+// ,uploadCloud.single('image')
