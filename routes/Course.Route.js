@@ -7,7 +7,9 @@ router.get('/',CourseController.getAllCourses)
 
 router.get('/:id',CourseController.getCourseById)
 
-router.post('/',middlewareController.verifyTokenAndAdminAuth,CourseController.createCourse)
+router.get('/teacher/:id',CourseController.getAllCoursesByIdTeacher)
+
+router.post('/',middlewareController.verifyToken,CourseController.createCourse)
 
 router.put('/:id',middlewareController.verifyTokenAndAdminAuth,CourseController.updateCourse)
 

@@ -3,6 +3,11 @@ const Joi= require('@hapi/joi')
 Joi.objectId = require('joi-objectid')(Joi)
 
 const courseSchema= mongoose.Schema({
+    id_teacher:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Teacher',
+        required: true
+    },
     name:{
         type: String,
         required: true,
@@ -22,11 +27,12 @@ const courseSchema= mongoose.Schema({
     },
     number_of_student:{
         type:Number,
-        default:0,
-        required: true
+        required: true,
+        min:1,
+        max:10
     },
     schedule:{
-        type: [mongoose.Schema.Types.Date],// change ? 
+        type: String,// change ? 
         required: true
     },
     time_per_lesson:{
@@ -35,10 +41,16 @@ const courseSchema= mongoose.Schema({
         min:45,
         max:180
     },
+    learning_period:{
+        type:Number,
+        required:true,
+        min:1,
+        max:12
+    },
     cost:{
         type:Number,
         required:true,
-        min:100000,
+        min:20000,
         max:5000000
     },
     image:{
@@ -52,13 +64,16 @@ const courseSchema= mongoose.Schema({
 
 function validateCourse(course){
     const schema= Joi.object({
+        id_teacher: Joi.objectId().required(),
         name: Joi.string().min(3).max(50).required(),
         category_id: Joi.objectId().required(),
-        number_of_student: Joi.number().required(),
-        description: Joi.string().min(5).max(50).required(),
-        schedule: Joi.array().items(Joi.date().required()),
-        time_per_lesson: Joi.number().min(45).max(180).required(),
-        cost: Joi.number().min(100000).max(5000000).required(),
+        number_of_student: Joi.string().required(),
+        description: Joi.string().min(5).required(),
+        schedule: Joi.string().required(),
+        time_per_lesson: Joi.string().required(),
+        learning_period: Joi.string().required(),
+        cost: Joi.number().min(20000).max(5000000).required(),
+        image: Joi.string()
     })
     return schema.validate(course)
 }

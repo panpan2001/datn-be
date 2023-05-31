@@ -135,6 +135,14 @@ exports.updateTeacher = async (req, res, next) => {
     if (!teacher) return res.status(404).send("Teacher not found")
     else req.send("Teacher's updated").json(teacher);
 }
+exports.updateTeacher2 = async (req, res, next) => {
+    const { error } = validateTeacher(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const teacher = await Teacher.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true });
+    if (!teacher) return res.status(404).send("Teacher not found")
+    else req.send("Teacher's 2 updated").json(teacher);
+}
 
 exports.deleteTeacher = async (req, res, next) => {
 
