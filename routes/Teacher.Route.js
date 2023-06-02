@@ -14,7 +14,7 @@ router.post('/',TeacherController.createTeacher)
 
 router.put('/:id',middlewareController.verifyToken,TeacherController.updateTeacher)
 
-router.patch('/:id',middlewareController.verifyToken,TeacherController.updateTeacher2)
+router.patch('/:id',TeacherController.updateTeacher2)
 
 router.delete('/:id',middlewareController.verifyTokenAndAdminAuth,TeacherController.deleteTeacher)
 

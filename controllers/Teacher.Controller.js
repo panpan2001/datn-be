@@ -119,8 +119,8 @@ exports.getTeacherByAccountId = async (req, res, next) => {
 }
 
 exports.updateTeacher = async (req, res, next) => {
-    const { error } = validateTeacher(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    // const { error } = validateTeacher(req.body);
+    // if (error) return res.status(400).send(error.details[0].message);
 
     const teacher = await Teacher.findByIdAndUpdate(req.params.id, {
         personal_description: req.body.personal_description,
@@ -136,12 +136,23 @@ exports.updateTeacher = async (req, res, next) => {
     else req.send("Teacher's updated").json(teacher);
 }
 exports.updateTeacher2 = async (req, res, next) => {
-    const { error } = validateTeacher(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    // const { error } = validateTeacher(req.body);
+    // if (error) return res.status(400).send(error.details[0].message);
+const course= await Course.findById(req.body.id_course)
+if(!course) return res.status(404).send("Course not found")
+const checkCourse= await Teacher.findOne({id_course:req.body.id_course})
+if(checkCourse) return res.status(404).send("Course already exist")
+    const teacher = await Teacher.findOneAndUpdate({ _id: req.params.id },
+         { 
+            $push: {
+        id_course: req.body.id_course
 
-    const teacher = await Teacher.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true });
+    }},
+     { new: true });
+        
+        console.log(teacher)
     if (!teacher) return res.status(404).send("Teacher not found")
-    else req.send("Teacher's 2 updated").json(teacher);
+    else res.status(200).json(teacher);
 }
 
 exports.deleteTeacher = async (req, res, next) => {
