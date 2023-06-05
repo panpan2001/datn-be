@@ -1,11 +1,16 @@
 const mongoose= require('mongoose')
-const Joi= require('joi')
-
+const Joi = require('@hapi/joi')
+Joi.objectId = require('joi-objectid')(Joi)
 const studentRatingSchema= mongoose.Schema({
    
-    name_teacher:{
-        type: mongoose.Schema.Types.String,
+    id_teacher:{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Teacher',
+        required: true
+    },
+    id_student:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Student',
         required: true
     },
     rating_avg_teacher:{
@@ -52,7 +57,8 @@ const studentRatingSchema= mongoose.Schema({
 })
 function validateStudentRating(studentRating){
     const schema= Joi.object({
-        name_teacher: Joi.object().name(),
+        id_teacher: Joi.objectId().name().required(),
+        id_student: Joi.objectId().name().required(),
         rating_avg_teacher: Joi.number().min(0).max(5).required(),
         rating_content_1: Joi.number().min(0).max(5).required(),
         rating_content_2: Joi.number().min(0).max(5).required(),

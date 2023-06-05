@@ -17,10 +17,13 @@ exports.createCourse = async (req, res, next) => {
             description: req.body.description,
             number_of_student: req.body.number_of_student,
             schedule: req.body.schedule,
+            start_date: req.body.start_date,
+            end_date: req.body.end_date,
             time_per_lesson: req.body.time_per_lesson,
             learning_period: req.body.learning_period,
             cost: req.body.cost,
-            image: req.body.image
+            image: req.body.image,
+            isDemoClass: req.body.isDemoClass
         });
         await course.save();
         res.send(course);
@@ -29,7 +32,7 @@ exports.createCourse = async (req, res, next) => {
 
 exports.getAllCourses = async (req, res, next) => {
     
-    const courses = await Course.find().populate('category_id');
+    const courses = await Course.find().populate('category_id').populate('id_teacher');
     if(!courses) res.status(404).send("The course doesn't exist")
     else res.send(courses);
 
@@ -37,9 +40,10 @@ exports.getAllCourses = async (req, res, next) => {
 
 exports.getCourseById = async (req, res, next) => {
     
-    const course = await Course.findById(req.params.id).populate('category_id');
+    const course = await Course.findById(req.params.id).populate('category_id').populate('id_teacher');
     if (!course) res.status(404).send("The course doesn't exist")
     else res.send(course);
+    console.log({course})
 }
 
 
@@ -61,10 +65,13 @@ exports.updateCourse = async (req, res, next) => {
         description: req.body.description,
         number_of_student: req.body.number_of_student,
         schedule: req.body.schedule,
+        start_date: req.body.start_date,
+        end_date: req.body.end_date,
         time_per_lesson: req.body.time_per_lesson,
         learning_period: req.body.learning_period,
         cost: req.body.cost,
-        image: req.body.image
+        image: req.body.image,
+        isDemoClass: req.body.isDemoClass
     },
      { new: true });
     if(!course) res.status(404).send("The course doesn't exist")

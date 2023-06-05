@@ -18,7 +18,7 @@ exports.createStudent = async (req, res, next) => {
             account_id: account_student._id,
             parent_name: req.body.parent_name,
             parent_phone_number: req.body.parent_phone_number,
-            id_rating_teacher: req.body.id_rating_teacher
+            // id_rating_teacher: req.body.id_rating_teacher
 
         })
         console.log("student created:  ", student)
@@ -52,7 +52,7 @@ exports.updateStudent = async (req, res, next) => {
     const student = await Student.findByIdAndUpdate(req.params.id, {
         parent_name: req.body.parent_name,
         parent_phone_number: req.body.parent_phone_number,
-        id_rating_teacher: req.body.id_rating_teacher
+        // id_rating_teacher: req.body.id_rating_teacher
     },
         { new: true })
     if (!student) res.status(404).send("The student doesn't exist")
@@ -81,16 +81,7 @@ exports.getStudentByAccountId = async (req, res, next) => {
         updatedAt: 0,
         __v: 0
     })
-    // student= await Account.aggregate([
-    //     {
-    //         $lookup:{
-    //             from:"Student",
-    //             localField:"_id",
-    //             foreignField:"account_id",
-    //             as:"student"
-    //         }
-    //     }
-    // ])
+   
     console.log("student get by account id : ", student)
 
     if (!student) res.status(404).send("The student doesn't exist")

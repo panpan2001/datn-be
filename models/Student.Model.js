@@ -17,10 +17,10 @@ const studentSchema= mongoose.Schema({
         minlength:10,
         maxlength:20
     },
-    id_rating_teacher:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:"StudentRating",
-    }]
+    // id_rating_teacher:[{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref:"StudentRating",
+    // }]
 },{
     timestamps: true
 })
@@ -30,7 +30,7 @@ function validateStudent(student){
         account_id: Joi.objectId().required(),
         parent_name: Joi.string().min(3).required(),
         parent_phone_number: Joi.string().min(10).max(20).required(),
-        id_rating_teacher: Joi.array().items(Joi.objectId())
+        // id_rating_teacher: Joi.array().items(Joi.objectId())
     })
     return schema.validate(student)
 }

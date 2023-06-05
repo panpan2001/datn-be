@@ -19,6 +19,17 @@ exports.createCourseStudent = async (req, res, next) => {
 
 exports.getAllCourseStudents = async (req, res, next) => {
     const courseStudents = await CourseStudent.find()
+    .populate('id_student',{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+
+    })
+    .populate('id_course',{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+    })
     if(!courseStudents) res.status(404).send("The course student doesn't exist")
     else res.send(courseStudents)
 }
@@ -26,6 +37,17 @@ exports.getAllCourseStudents = async (req, res, next) => {
 exports.getCourseStudentById = async (req, res, next) => {
     
     const courseStudent = await CourseStudent.findById(req.params.id)
+    .populate('id_student',{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+
+    })
+    .populate('id_course',{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+    })
     if(!courseStudent) res.status(404).send("The course student doesn't exist")
     else res.send(courseStudent)
 }

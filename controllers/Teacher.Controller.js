@@ -20,7 +20,7 @@ exports.createTeacher = async (req, res, next) => {
             account_id: account_id._id,
             personal_description: req.body.personal_description,
             personal_image: req.body.personal_image,
-            // personal_image: personal_image.path,
+            personal_image: personal_image.path,
             id_student_rate: req.body.id_student_rate,
             id_parent_rate: req.body.id_parent_rate,
             id_course: req.body.id_course,

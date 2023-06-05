@@ -4,11 +4,14 @@ const { StudentRating, validateStudentRating } = require('../models/StudentRatin
 exports.createStudentRating = async (req, res, next) => {
     const { error } = validateStudentRating(req.body)
     if (error) return res.status(400).send(error.details[0].message)
-    const name_teacher = await Account.findOne({ full_name: req.body.name_teacher })
-    if (!name_teacher) res.status(404).send("The teacher doesn't exist")
-    else {
+    const id_teacher = await Account.findOne({ id_teacher: req.body.id_teacher })
+    if (!id_teacher) res.status(404).send("The teacher doesn't exist")
+    const id_student = await Account.findOne({ id_student: req.body.id_student })
+    if (!id_student) res.status(404).send("The student doesn't exist")
+    // else {
         const studentRating = new StudentRating({
-            name_teacher: req.body.name_teacher,
+            id_teacher:  req.body.id_teacher,
+            id_student: req.body.id_student,
             rating_avg_teacher: req.body.rating_avg_teacher,
             rating_content_1: req.body.rating_content_1,
             rating_content_2: req.body.rating_content_2,
@@ -18,7 +21,7 @@ exports.createStudentRating = async (req, res, next) => {
         })
         await studentRating.save()
         res.send(studentRating)
-    }
+    // }
 }
 
 exports.getAllStudentRatings = async (req, res, next) => {
@@ -38,7 +41,8 @@ exports.updateStudentRating = async (req, res, next) => {
     const { error } = validateStudentRating(req.body)
     if (error) return res.status(400).send(error.details[0].message)
     const studentRating = await StudentRating.findByIdAndUpdate(req.params.id, {
-        name_teacher: req.body.name_teacher,
+        id_teacher:  req.body.id_teacher,
+        id_student: req.body.id_student,
         rating_avg_teacher: req.body.rating_avg_teacher,
         rating_content_1: req.body.rating_content_1,
         rating_content_2: req.body.rating_content_2,

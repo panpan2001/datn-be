@@ -21,12 +21,12 @@ const teacherSchema= mongoose.Schema({
     id_student_rate:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:"StudentRating",
-        // required: true
+        required: true
     }],
     id_parent_rate:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:"ParentRating",
-        // required: true
+        required: true
     }],
     id_course:[{
         type: mongoose.Schema.Types.ObjectId,

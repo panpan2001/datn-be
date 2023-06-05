@@ -27,6 +27,8 @@ const courseRoutes=require('./routes/Course.Route');
 const courseStudentRoutes=require('./routes/CourseStudent.Route');
 const studentRatingRoutes=require('./routes/StudentRating.Route');
 const parentRatingRoutes=require('./routes/ParentRating.Routes');
+const demoCourseStudentRoutes=require('./routes/DemoCourseStudent.Route');
+
 
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -61,7 +63,7 @@ app.use('/api/courses',courseRoutes)
 app.use('/api/courseStudents',courseStudentRoutes)
 app.use('/api/studentRatings',studentRatingRoutes)
 app.use('/api/parentRatings',parentRatingRoutes)
-
+app.use('/api/demoCourseStudents',demoCourseStudentRoutes)
 
 
 db.connect()
