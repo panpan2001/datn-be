@@ -3,7 +3,7 @@ const router = express.Router()
 const AccountController= require('../controllers/Account.Controller')
 const middlewareController = require('../middlewares/middleware.Controller')
 
-router.get('/',middlewareController.verifyToken,AccountController.getAllAccounts)
+router.get('/',AccountController.getAllAccounts)
 
 router.get('/:id',AccountController.getAccountById)
 

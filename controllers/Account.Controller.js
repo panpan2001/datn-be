@@ -6,6 +6,7 @@ let { Account, validateAccount } = require('../models/Account.Model')
 exports.getAllAccounts = async (req, res, next) => {
 
         const accounts = await Account.find();
+        console.log(accounts.length)
         if(!accounts) return res.status(404).send("Accounts not found")
         else res.status(200).json(accounts);   
 }

@@ -13,14 +13,6 @@ const demoCourseStudentSchema= mongoose.Schema({
         ref: 'Course',
         required: true
     },
-    start_date:{
-        type: String,
-        required:true
-    },
-    end_date:{
-        type: String,
-        required:true
-    },
     isDeleted:{
         type:Boolean,
         default:false
@@ -32,10 +24,9 @@ const demoCourseStudentSchema= mongoose.Schema({
 
 function validateDemoCourseStudent(demoCourseStudent){
     const schema= Joi.object({
-        id_student: Joi.objectId().name().required(),
-        id_course: Joi.objectId().name().required(),
-        start_date: Joi.string().required(),
-        end_date: Joi.string().required()
+        id_student: Joi.objectId().required(),
+        id_course: Joi.objectId().required(),
+        isDeleted: Joi.boolean().required()
     })
     return schema.validate(demoCourseStudent)
 }
