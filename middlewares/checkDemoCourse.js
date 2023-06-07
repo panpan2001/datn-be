@@ -17,11 +17,13 @@ console.log("checkDuplicateCourse")
                 {
                     id_student: req.body.id_student,
                     id_course: req.body.id_course
-                })
+                }).exec()
+                console.log({demoCourseStudent})
             if (demoCourseStudent) {
-                res.send("You are already in this course")
+                res.status(400).send("Bạn đã đăng kí khóa học này rồi!")
+                console.log(demoCourseStudent)
             }
-            next()
+          else next()
         } catch (error) {
             console.log(error)
         }
@@ -39,12 +41,12 @@ console.log("checkDuplicateCourse")
             updatedAt: 0,
             __v: 0
         })
-        console.log({ number_of_student, demoCourseStudent })
+        console.log( "number_of_student",number_of_student.number_of_student,"number of demo course student ", demoCourseStudent )
         if (demoCourseStudent==null || demoCourseStudent.length < number_of_student.number_of_student) {
             next()
 
         }
-        else return res.send("This course is full")
+        else return res.status(400).send("Lớp học đã đầy. Vui lòng chọn lớp học khác")
     },
 
 }
