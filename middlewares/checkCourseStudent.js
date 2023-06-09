@@ -19,8 +19,8 @@ console.log("checkDuplicateCourse")
                 }).exec()
                 // console.log({courseStudent})
             if (courseStudent) {
+                console.log("Da dang ki roi do ")
                 res.status(400).send("Bạn đã đăng kí khóa học này rồi!")
-                console.log(courseStudent)
             }
           else next()
         } catch (error) {
@@ -30,7 +30,7 @@ console.log("checkDuplicateCourse")
     },
     checkFullAccess: async (req, res, next) => {
         console.log("checkFullAccess")
-        const courseStudent = await CourseStudent.findById(req.body.id_course, {
+        const courseStudent = await CourseStudent.find({id_course:req.body.id_course}, {
             createdAt: 0,
             updatedAt: 0,
             __v: 0

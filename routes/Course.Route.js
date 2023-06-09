@@ -13,6 +13,6 @@ router.post('/',middlewareController.verifyToken,CourseController.createCourse)
 
 router.put('/:id',middlewareController.verifyTokenAndAdminAuth,CourseController.updateCourse)
 
-router.delete('/:id',middlewareController.verifyTokenAndAdminAuth,CourseController.deleteCourse)
+router.delete('/:id',middlewareController.verifyUserAndAdminAuth,CourseController.deleteCourse)
 
 module.exports = router

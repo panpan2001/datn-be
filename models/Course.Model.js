@@ -69,7 +69,11 @@ const courseSchema= mongoose.Schema({
         type:Boolean,
         default:false,
         required:true
-    }
+    },
+    link_video:[{
+        type:String,
+        default:""
+    }]
    
 },{
     timestamps: true
@@ -89,7 +93,8 @@ function validateCourse(course){
         learning_period: Joi.string().required(),
         cost: Joi.number().min(20000).max(5000000).required(),
         image: Joi.string(),
-        isDemoClass: Joi.boolean().required()
+        isDemoClass: Joi.boolean().required(),
+        link_video: Joi.array().items(Joi.string().required()),
     })
     return schema.validate(course)
 }

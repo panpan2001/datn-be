@@ -31,7 +31,7 @@ console.log("checkDuplicateCourse")
     },
     checkFullAccess: async (req, res, next) => {
         console.log("checkFullAccess")
-        const demoCourseStudent = await DemoCourseStudent.findById(req.body.id_course, {
+        const demoCourseStudent = await DemoCourseStudent.find({id_course:req.body.id_course}, {
             createdAt: 0,
             updatedAt: 0,
             __v: 0
@@ -41,7 +41,7 @@ console.log("checkDuplicateCourse")
             updatedAt: 0,
             __v: 0
         })
-        console.log( "number_of_student",number_of_student.number_of_student,"number of demo course student ", demoCourseStudent )
+        console.log( "number_of_student",number_of_student.number_of_student,"number of demo course student ", demoCourseStudent.length )
         if (demoCourseStudent==null || demoCourseStudent.length < number_of_student.number_of_student) {
             next()
 
