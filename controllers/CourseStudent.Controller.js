@@ -3,17 +3,13 @@ const {Student} = require("../models/Student.Model")
 const {Course} = require("../models/Course.Model")
 
 exports.createCourseStudent = async (req, res, next) => {
-    const {error}= validateCourseStudent(req.body)
-    if(error) return res.status(400).send(error.details[0].message)
-    const id_student= await Student.findById(req.body.id_student)
-    const id_course= await Course.findById(req.body.id_course)
-    if(!id_student || !id_course) return res.status(404).send("The student or course doesn't exist")
-
+    console.log("create course student ")
     const courseStudent = new CourseStudent({
         id_student: req.body.id_student,
         id_course: req.body.id_course
     })
     await courseStudent.save()
+    console.log("course student created: ",{courseStudent})
     res.send(courseStudent)
 }
 
@@ -50,6 +46,25 @@ exports.getCourseStudentById = async (req, res, next) => {
     })
     if(!courseStudent) res.status(404).send("The course student doesn't exist")
     else res.send(courseStudent)
+}
+
+
+exports.getCourseStudentByStudentId=async (req, res, next) => {
+    const courseStudent = await CourseStudent.find({id_student:req.params.id})
+    .populate('id_student',{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+
+    })
+    .populate('id_course',{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+    })
+    if(!courseStudent) res.status(404).send("The course student doesn't exist")
+    else res.send(courseStudent)
+
 }
 
 exports.updateCourseStudent = async (req, res, next) => {

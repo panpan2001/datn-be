@@ -1,5 +1,6 @@
 const mongoose= require('mongoose')
-const Joi= require('joi')
+const Joi= require('@hapi/joi')
+Joi.objectId = require('joi-objectid')(Joi)
 
 const courseStudentSchema= mongoose.Schema({
     id_student:{
@@ -18,8 +19,8 @@ const courseStudentSchema= mongoose.Schema({
 
 function validateCourseStudent(courseStudent){
     const schema= Joi.object({
-        id_student: Joi.object().required(),
-        id_course: Joi.object().required()
+        id_student: Joi.objectId().required(),
+        id_course: Joi.objectId().required(),
     })
     return schema.validate(courseStudent)
 }

@@ -2,7 +2,7 @@ const express= require('express')
 const router = express.Router()
 const DemoCourseStudentController= require('../controllers/DemoCourseStudent.Controller')
 const middlewareController = require('../middlewares/middleware.Controller')
-const checkDemoCourseStudent = require('../middlewares/checkDemoCourse')
+const checkDemoCourseStudent = require('../middlewares/checkDemoCourseStudent')
 
 
 router.get('/',DemoCourseStudentController.getAllDemoCourseStudents)
