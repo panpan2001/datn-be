@@ -20,10 +20,10 @@ exports.createTeacher = async (req, res, next) => {
             account_id: account_id._id,
             personal_description: req.body.personal_description,
             personal_image: req.body.personal_image,
-            personal_image: personal_image.path,
-            id_student_rate: req.body.id_student_rate,
-            id_parent_rate: req.body.id_parent_rate,
-            id_course: req.body.id_course,
+            // personal_image: personal_image.path,
+            // id_student_rate: req.body.id_student_rate,
+            // id_parent_rate: req.body.id_parent_rate,
+            // id_course: req.body.id_course,
             id_academic: req.body.id_academic,
             id_degree: req.body.id_degree
         })
@@ -39,7 +39,6 @@ exports.getAllTeachers = async (req, res, next) => {
 
     const teachers = await Teacher.find()
         .populate('account_id')
-        .populate('id_course')
         .populate('id_academic')
         .populate('id_degree');
     if (!teachers) res.status(404).send("The teacher doesn't exist")
@@ -61,11 +60,6 @@ exports.getTeacherById = async (req, res, next) => {
                 updatedAt: 0,
                 __v: 0
             })
-        .populate('id_course', {
-            createdAt: 0,
-            updatedAt: 0,
-            __v: 0
-        })
         .populate('id_academic', {
             createdAt: 0,
             updatedAt: 0,
@@ -98,11 +92,6 @@ exports.getTeacherByAccountId = async (req, res, next) => {
                 updatedAt: 0,
                 __v: 0
             })
-        .populate('id_course', {
-            createdAt: 0,
-            updatedAt: 0,
-            __v: 0
-        })
         .populate('id_academic', {
             createdAt: 0,
             updatedAt: 0,
@@ -119,15 +108,15 @@ exports.getTeacherByAccountId = async (req, res, next) => {
 }
 
 exports.updateTeacher = async (req, res, next) => {
-    // const { error } = validateTeacher(req.body);
-    // if (error) return res.status(400).send(error.details[0].message);
+    const { error } = validateTeacher(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
     const teacher = await Teacher.findByIdAndUpdate(req.params.id, {
         personal_description: req.body.personal_description,
         personal_image: req.body.personal_image,
-        id_student_rate: req.body.id_student_rate,
-        id_parent_rate: req.body.id_parent_rate,
-        id_course: req.body.id_course,
+        // id_student_rate: req.body.id_student_rate,
+        // id_parent_rate: req.body.id_parent_rate,
+        // id_course: req.body.id_course,
         id_academic: req.body.id_academic,
         id_degree: req.body.id_degree
     },
@@ -159,7 +148,6 @@ exports.deleteTeacher = async (req, res, next) => {
 
     const teacher = await Teacher.findByIdAndDelete(req.params.id)
     .populate('account_id')
-    .populate('id_course')
     .populate('id_academic')
     .populate('id_degree');
     if (!teacher) res.status(404).send("Teacher not found")

@@ -3,6 +3,7 @@ const { Teacher } = require('../models/Teacher.Model');
 const {CourseCategory}=require('../models/CourseCategory.Model');
 const { deleteCourseStudent } = require('./CourseStudent.Controller');
 const { CourseStudent } = require('../models/CourseStudent.Model');
+const { DemoCourseStudent } = require('../models/DemoCourseStudent.Model');
 
 exports.createCourse = async (req, res, next) => {
     const { error } = validateCourse(req.body);
@@ -25,8 +26,8 @@ exports.createCourse = async (req, res, next) => {
             learning_period: req.body.learning_period,
             cost: req.body.cost,
             image: req.body.image,
-            isDemoClass: req.body.isDemoClass,
-            link_video: req.body.link_video
+            link_video: req.body.link_video,
+             link_meeting: req.body.link_meeting
         });
         await course.save();
         res.send(course);
@@ -74,8 +75,8 @@ exports.updateCourse = async (req, res, next) => {
         learning_period: req.body.learning_period,
         cost: req.body.cost,
         image: req.body.image,
-        isDemoClass: req.body.isDemoClass,
-        link_video: req.body.link_video
+        link_video: req.body.link_video,
+        link_meeting: req.body.link_meeting
     },
      { new: true });
     if(!course) res.status(404).send("The course doesn't exist")
@@ -85,6 +86,7 @@ exports.updateCourse = async (req, res, next) => {
 exports.deleteCourse = async (req, res, next) => {
     const course = await Course.findByIdAndDelete(req.params.id);
      await CourseStudent.findOneAndDelete({id_course:req.params.id})
+     await DemoCourseStudent.findOneAndDelete({id_course:req.params.id})
     if (!course) res.status(404).send("The course doesn't exist")
     else res.send(course);
 }

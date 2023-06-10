@@ -65,12 +65,12 @@ const courseSchema= mongoose.Schema({
         type:String,
         default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMV97UpeAbbPPiPpJz8iFsmgeusjg_pVfTscc75Hm18KTA6np6O7Tro2YAaooQDdqq_zk&usqp=CAU"
     },
-    isDemoClass:{
-        type:Boolean,
-        default:false,
-        required:true
-    },
+   
     link_video:[{
+        type:String,
+        default:""
+    }],
+    link_meeeting:[{
         type:String,
         default:""
     }]
@@ -93,8 +93,8 @@ function validateCourse(course){
         learning_period: Joi.string().required(),
         cost: Joi.number().min(20000).max(5000000).required(),
         image: Joi.string(),
-        isDemoClass: Joi.boolean().required(),
         link_video: Joi.array().items(Joi.string().required()),
+        link_meeting: Joi.array().items(Joi.string().required()),
     })
     return schema.validate(course)
 }
