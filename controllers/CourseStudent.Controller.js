@@ -83,5 +83,8 @@ exports.updateCourseStudent = async (req, res, next) => {
 exports.deleteCourseStudent = async (req, res, next) => {
     const courseStudent = await CourseStudent.findByIdAndDelete(req.params.id)
     if(!courseStudent) res.status(404).send("The course student doesn't exist")
-    else res.send(courseStudent)
+    else {
+        const coursesStudent = await CourseStudent.find({id_student: courseStudent.id_student})
+        res.send(coursesStudent)
+    }
 }

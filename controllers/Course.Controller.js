@@ -88,5 +88,10 @@ exports.deleteCourse = async (req, res, next) => {
      await CourseStudent.findOneAndDelete({id_course:req.params.id})
      await DemoCourseStudent.findOneAndDelete({id_course:req.params.id})
     if (!course) res.status(404).send("The course doesn't exist")
-    else res.send(course);
+    else {
+        //
+        const newcourses=await Course.find({id_teacher: course.id_teacher}).populate('category_id').populate('id_teacher');
+        res.send(newcourses)
+
+    };
 }
