@@ -38,7 +38,7 @@ const middlewareController = {
     },
     verifyUserAndAdminAuth:(req,res,next)=>{
         middlewareController.verifyToken(req,res,()=>{
-            console.log("req.header.account_id: ",req.headers.account_id,typeof(req.headers.account_id))
+            console.log("req.headers.account_id: ",req.headers.account_id,typeof(req.headers.account_id))
             console.log("req.account: ",req.account,typeof(req.account.id))
             console.log(req.account.id!==req.headers.account_id)
             if(req.account.id==req.headers.account_id||req.account.role_name=="admin"){
