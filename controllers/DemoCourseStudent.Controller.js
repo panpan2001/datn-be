@@ -6,9 +6,7 @@ exports.createDemoCourseStudent= async (req, res, next) => {
 
     const demoCourseStudent = new DemoCourseStudent({
         id_student: req.body.id_student,
-        // id_course: req.body.id_course,
         id_demo_course: req.body.id_demo_course,
-        isDeleted: req.body.isDeleted
     })
     await demoCourseStudent.save()
     res.send(demoCourseStudent)
@@ -77,7 +75,7 @@ exports.getDemoCourseStudentByStudentId= async (req, res, next) => {
     else res.send(demoCourseStudent)
 }
 
-exports.getDemoCourseStudentByCourseId= async (req, res, next) => {
+exports.getDemoCourseStudentByDemoCourseId= async (req, res, next) => {
     // const demoCourseStudent = await Course.find({id_course:req.params.id})
     const demoCourseStudent = await DemoCourse.find({id_demo_course:req.params.id})
     // .populate('id_student', {
@@ -90,7 +88,7 @@ exports.getDemoCourseStudentByCourseId= async (req, res, next) => {
     //     updatedAt: 0,
     //     __v: 0
     // })
-    if (!demoCourseStudent) res.status(404).send("The course student doesn't exist")
+    if (!demoCourseStudent) res.status(404).send("The demo  course student student doesn't exist")
     else res.send(demoCourseStudent)
 }
 
@@ -99,9 +97,7 @@ exports.updateDemoCourseStudent= async (req, res, next) => {
     if (error) return res.status(400).send(error.details[0].message)
     const demoCourseStudent = await DemoCourseStudent.findByIdAndUpdate(req.params.id, {
         id_student: req.body.id_student,
-        // id_course: req.body.id_course,
         id_demo_course: req.body.id_demo_course,
-        isDeleted: req.body.isDeleted
     })
     if (!demoCourseStudent) res.status(404).send("The course student doesn't exist")
     else res.send(demoCourseStudent)
@@ -110,7 +106,12 @@ exports.updateDemoCourseStudent= async (req, res, next) => {
 exports.deleteDemoCourseStudent= async (req, res, next) => {
     const demoCourseStudent = await DemoCourseStudent.findByIdAndDelete(req.params.id)
     if (!demoCourseStudent) res.status(404).send("The course student doesn't exist")
-    else res.send(demoCourseStudent)
+    else {
+        const newDemoCourseStudent = await DemoCourseStudent.find({id_student:demoCourseStudent.id_student})
+
+        res.send(newDemoCourseStudent)
+    
+    }
 }
 
 

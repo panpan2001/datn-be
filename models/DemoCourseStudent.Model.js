@@ -8,15 +8,11 @@ const demoCourseStudentSchema= mongoose.Schema({
         ref: 'Student',
         required: true
     },
-    id_course:{
+    id_demo_course:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course',
+        ref: 'DemoCourse',
         required: true
     },
-    isDeleted:{
-        type:Boolean,
-        default:false
-    }
     
 },{
     timestamps: true
@@ -25,8 +21,7 @@ const demoCourseStudentSchema= mongoose.Schema({
 function validateDemoCourseStudent(demoCourseStudent){
     const schema= Joi.object({
         id_student: Joi.objectId().required(),
-        id_course: Joi.objectId().required(),
-        isDeleted: Joi.boolean().required()
+        id_demo_course: Joi.objectId().required(),
     })
     return schema.validate(demoCourseStudent)
 }

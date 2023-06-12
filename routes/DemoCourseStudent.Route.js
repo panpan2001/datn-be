@@ -9,6 +9,8 @@ router.get('/',DemoCourseStudentController.getAllDemoCourseStudents)
 
 router.get('/student/:id',DemoCourseStudentController.getDemoCourseStudentByStudentId)
 
+router.get('/demoCourse/:id',DemoCourseStudentController.getDemoCourseStudentByDemoCourseId)
+
 router.get('/:id',DemoCourseStudentController.getDemoCourseStudentById)
 
 router.post('/',middlewareController.verifyToken,checkDemoCourseStudent.checkDuplicateCourse,checkDemoCourseStudent.checkFullAccess,DemoCourseStudentController.createDemoCourseStudent)

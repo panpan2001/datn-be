@@ -1,5 +1,6 @@
 const demoCourseController = require("../controllers/DemoCourseStudent.Controller")
 const { Course } = require("../models/Course.Model")
+const { DemoCourse } = require("../models/DemoCourse.Model")
 const { DemoCourseStudent, validateDemoCourseStudent } = require("../models/DemoCourseStudent.Model")
 const { Student } = require("../models/Student.Model")
 
@@ -42,11 +43,15 @@ console.log("checkDuplicateCourse")
             updatedAt: 0,
             __v: 0
         })
-        const number_of_student = await Course.findById(req.body.id_course, {
+        console.log("demoCourseStudent",demoCourseStudent)
+        const democourse = await DemoCourse.findById(req.body.id_demo_course)
+        console.log("democourse",democourse)
+        const number_of_student = await Course.findById(democourse.id_course, {
             createdAt: 0,
             updatedAt: 0,
             __v: 0
         })
+        console.log("number_of_student",number_of_student)
         console.log( "number_of_student",number_of_student.number_of_student,"number of demo course student ", demoCourseStudent.length )
         if (demoCourseStudent==null || demoCourseStudent.length < number_of_student.number_of_student) {
             next()
