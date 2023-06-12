@@ -47,7 +47,7 @@ exports.getCourseById = async (req, res, next) => {
     const course = await Course.findById(req.params.id).populate('category_id').populate('id_teacher');
     if (!course) res.status(404).send("The course doesn't exist")
     else res.send(course);
-    console.log({course})
+    // console.log({course})
 }
 
 

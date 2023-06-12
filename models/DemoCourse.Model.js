@@ -16,12 +16,22 @@ const demoCourseSchema= mongoose.Schema({
         type: String,
         required: true
     },
+    schedule:{
+        type: String,// change ? 
+        required: true
+    },
     cost:{
         type:Number,
         required:true,
         min:20000,
         max:5000000
 
+    },
+    learning_period:{
+        type:Number,
+        required:true,
+        min:1,
+        max:5 
     },
     link_video:[{
         type: String,
@@ -39,6 +49,8 @@ function validateDemoCourse(demoCourse){
         start_date: Joi.string().required(),
         end_date: Joi.string().required(),
         cost: Joi.number().min(20000).max(5000000).required(),
+        schedule: Joi.string().required(),
+        learning_period: Joi.number().min(1).max(5).required(),
         link_video: Joi.array().items(Joi.string()).required(),
         link_meeting: Joi.array().items(Joi.string()).required()
     })
