@@ -17,6 +17,6 @@ router.post('/',middlewareController.verifyToken,checkDemoCourseStudent.checkDup
 
 router.put('/:id',middlewareController.verifyToken,DemoCourseStudentController.updateDemoCourseStudent)
 
-router.delete('/:id',middlewareController.verifyToken,DemoCourseStudentController.deleteDemoCourseStudent)
+router.delete('/:id',middlewareController.verifyUserAndAdminAuth,DemoCourseStudentController.deleteDemoCourseStudent)
 
 module.exports = router

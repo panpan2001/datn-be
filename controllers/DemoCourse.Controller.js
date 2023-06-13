@@ -64,7 +64,7 @@ exports.getDemoCourseByCourseId = async (req, res, next) => {
         link_video: 0,
         link_meeting: 0
     })
-    console.log("demoCourse",{demoCourse})
+    // console.log("demoCourse",{demoCourse})
     if (!demoCourse) res.status(404).send("The demo course doesn't exist")
     else res.send(demoCourse)
 }
@@ -83,19 +83,15 @@ exports.getDemoCourseByTeacherId = async (req, res, next) => {
         link_video: 0,
         link_meeting: 0
     })
-    
-    // const demoCourse = await DemoCourse.find({ id_course: course._id })
-    // .populate('id_course', {
-    //     start_date: 0,
-    //     end_date: 0,
-    //     cost: 0,
-    //     learning_period: 0,
-    //     link_video: 0,
-    //     link_meeting: 0
-    // })
-    // console.log({demoCourse})
+    .populate('id_course', {
+        start_date: 0,
+        end_date: 0,
+        cost: 0,
+        learning_period: 0,
+        link_video: 0,
+        link_meeting: 0
+    })
    
-    // console.log({demoCourse})
     if (!demoCourse) res.status(404).send("The demo course doesn't exist")
     else res.send(demoCourse)
 }
@@ -117,11 +113,27 @@ exports.updateDemoCourse = async (req, res, next) => {
 }
 
 exports.deleteDemoCourse = async (req, res, next) => {
-    const course = await DemoCourse.findByIdAndDelete(req.params.id)
-    await DemoCourseStudent.findByIdAndDelete({ id_course: course.id_course })
-
-    if (!course) res.status(404).send("The course doesn't exist")
-    else res.send(course)
+    console.log("id  democourse delete",req.params.id)
+    const demoCourse = await DemoCourse.findByIdAndDelete(req.params.id)
+    console.log({demoCourse})
+    const demoCourseStudent = await DemoCourseStudent.find({ id__demo_course: demoCourse.id_demo_course })
+if(demoCourseStudent){
+await DemoCourseStudent.deleteMany({ id_demo_course: demoCourse.id_demo_course })
+}
+    if (!demoCourse) res.status(404).send("The course doesn't exist")
+    else {
+      const newDemoCourse= await DemoCourse.find({ id_course: demoCourse.id_course })
+      .populate('id_course', {
+        start_date: 0,
+        end_date: 0,
+        cost: 0,
+        learning_period: 0,
+        link_video: 0,
+        link_meeting: 0
+      })
+        res.status(200).send(newDemoCourse)
+    console.log({newDemoCourse})
+    }
 }
 
 // https://stackoverflow.com/questions/8303900/mongodb-mongoose-findmany-find-all-documents-with-ids-listed-in-array 
