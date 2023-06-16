@@ -1,4 +1,5 @@
 const { Course } = require("../models/Course.Model")
+const { CourseCategory } = require("../models/CourseCategory.Model")
 const { DemoCourse } = require("../models/DemoCourse.Model")
 const { DemoCourseStudent, validateDemoCourseStudent } = require("../models/DemoCourseStudent.Model")
 
@@ -53,11 +54,19 @@ exports.getDemoCourseStudentByStudentId= async (req, res, next) => {
         updatedAt: 0,
         __v: 0
     })
-    .populate('id_demo_course', {
-        createdAt: 0,
-        updatedAt: 0,
-        __v: 0
-    })
+    .populate([{
+        path: 'id_demo_course',
+        populate: {
+            path: 'id_course',
+            model: Course,
+            select: "id_course name ",
+            populate: {
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            }
+        }
+    }])
   
     if (!demoCourseStudent) res.status(404).send("The course student doesn't exist")
     else res.send(demoCourseStudent)

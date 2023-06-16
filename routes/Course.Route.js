@@ -15,4 +15,6 @@ router.put('/:id',middlewareController.verifyTokenAndAdminAuth,CourseController.
 
 router.delete('/:id',middlewareController.verifyUserAndAdminAuth,CourseController.deleteCourse)
 
+router.delete('/admin/:id',middlewareController.verifyUserAndAdminAuth,CourseController.adminDeleteCourse)
+
 module.exports = router

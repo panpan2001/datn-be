@@ -49,6 +49,7 @@ exports.updateTeacherDegree=async(req,res,next)=>{
 }
 
 exports.updateTeacherDegreeStatus= async (req, res, next) => {
+    console.log("updateTeacherDegreeStatus req.body",req.body);
     const teacherDegree = await TeacherDegree.findByIdAndUpdate(req.params.id, {
         degree_status: req.body.degree_status
     }, { new: true });

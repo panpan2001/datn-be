@@ -52,7 +52,7 @@ exports.updateTeacherAcademic = async (req, res, next) => {
 }
 
 exports.updateTeacherAcademicStatus= async (req, res, next) => {
-    console.log("req body",req.body)
+    console.log("updateTeacherAcademicStatus req body",req.body)
     const teacherAcademic = await TeacherAcademic.findByIdAndUpdate(req.params.id, {
         academic_status: req.body.academic_status
     }, { new: true });

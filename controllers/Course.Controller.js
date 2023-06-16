@@ -92,16 +92,17 @@ exports.updateCourse = async (req, res, next) => {
 
 exports.deleteCourse = async (req, res, next) => {
     const course = await Course.findByIdAndDelete(req.params.id);
-    const courseStudent= await CourseStudent.find({ id_course: req.params.id })
-    if(courseStudent){
+    // const courseStudent= await CourseStudent.findOne({ id_course: req.params.id })
+    // if(courseStudent){
         await CourseStudent.deleteMany({ id_course: req.params.id })
 
-    }
-    const demoCourse = await DemoCourse.findOneAndDelete({ id_course: req.params.id })
-    if(demoCourse){
+    // }
+    const demoCourse = await DemoCourse.findOne({ id_course: req.params.id })
+    // if(demoCourse){
+        await DemoCourse.deleteMany({ id_course: req.params.id })
         await DemoCourseStudent.deleteMany({ id_demo_course: demoCourse._id })
 
-    }
+    // }
     if (!course) res.status(404).send("The course doesn't exist")
     else {
         //
@@ -109,6 +110,42 @@ exports.deleteCourse = async (req, res, next) => {
         .populate('category_id')
         .populate('id_teacher');
         res.send(newcourses)
+
+    };
+}
+
+exports.adminDeleteCourse = async (req, res, next) => {
+    const course = await Course.findByIdAndDelete(req.params.id);
+    // const courseStudent= await CourseStudent.findOne({ id_course: req.params.id })
+    // if(courseStudent){
+        const a= await CourseStudent.deleteMany({ id_course: req.params.id })
+        console.log("a",a)
+    // }
+    const demoCourse = await DemoCourse.findOne({ id_course: req.params.id })
+    // console.log({demoCourse})
+
+    if(demoCourse){
+      const b=  await DemoCourse.deleteMany({ id_course: req.params.id })
+      console.log("b",b)
+       const num= await DemoCourseStudent.deleteMany({ id_demo_course: demoCourse._id })
+       console.log("num",num)
+    }
+    if (!course) res.status(404).send("The course doesn't exist")
+    else {
+        //
+        const newcourses = await Course.find()
+        .populate('category_id')
+        .populate('id_teacher');
+        const newDemoCourses = await DemoCourse.find()
+        .populate('id_course', {
+            start_date: 0,
+            end_date: 0,
+            cost: 0,
+            learning_period: 0,
+            link_video: 0,
+            link_meeting: 0
+        })
+        res.send({newcourses, newDemoCourses})
 
     };
 }
