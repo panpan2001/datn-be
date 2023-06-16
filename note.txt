@@ -4,3 +4,7 @@ teacher check: pannguyen2001@gmail.com - 123456
 nhat.pham.novasquare@gmail.com - 123456
 
 student check : phamnhikhau@gmail.com - 123456 
+
+https://firebase.google.com/docs/cloud-messaging/http-server-ref
+https://firebase.google.com/docs/cloud-messaging/http-server-ref#table9 
+https://firebase.google.com/docs/cloud-messaging/send-message#send_to_a_device_group

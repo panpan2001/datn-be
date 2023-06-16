@@ -5,6 +5,7 @@ const bodyParser = require("body-parser")
 const dotenv=require('dotenv')
 const cors=require('cors')
 const cookieParser=require('cookie-parser')
+var FCM= require('fcm-node');
 
 //create app 
 dotenv.config()
@@ -29,6 +30,8 @@ const studentRatingRoutes=require('./routes/StudentRating.Route');
 const parentRatingRoutes=require('./routes/ParentRating.Routes');
 const demoCourseStudentRoutes=require('./routes/DemoCourseStudent.Route');
 const demoCourseRoutes=require('./routes/DemoCourse.Route');
+const pushNotification=require('./routes/PushNotification.Route');
+
 
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -65,6 +68,8 @@ app.use('/api/studentRatings',studentRatingRoutes)
 app.use('/api/parentRatings',parentRatingRoutes)
 app.use('/api/demoCourseStudents',demoCourseStudentRoutes)
 app.use('/api/demoCourses',demoCourseRoutes)
+app.use('/api/notifications',pushNotification)
+
 
 db.connect()
 const port= process.env.PORT||8080

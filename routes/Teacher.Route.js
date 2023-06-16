@@ -16,7 +16,7 @@ router.put('/:id',middlewareController.verifyToken,TeacherController.updateTeach
 
 router.patch('/:id',TeacherController.updateTeacher2)
 
-router.delete('/:id',middlewareController.verifyTokenAndAdminAuth,TeacherController.deleteTeacher)
+router.delete('/:id',middlewareController.verifyUserAndAdminAuth,TeacherController.deleteTeacher)
 
 
 module.exports = router

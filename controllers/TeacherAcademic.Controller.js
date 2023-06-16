@@ -51,6 +51,15 @@ exports.updateTeacherAcademic = async (req, res, next) => {
 
 }
 
+exports.updateTeacherAcademicStatus= async (req, res, next) => {
+    console.log("req body",req.body)
+    const teacherAcademic = await TeacherAcademic.findByIdAndUpdate(req.params.id, {
+        academic_status: req.body.academic_status
+    }, { new: true });
+    if(!teacherAcademic) res.status(404).send("The teacher academic doesn't exist")
+    else  res.send(teacherAcademic);
+}
+
 exports.deleteTeacherAcademic = async (req, res, next) => {
     const teacherAcademic = await TeacherAcademic.findByIdAndDelete(req.params.id);
     if (!teacherAcademic) res.status(404).send("The teacher academic doesn't exist");

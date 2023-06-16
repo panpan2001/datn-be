@@ -9,8 +9,10 @@ router.get('/:id',TeacherAcademicController.getTeacherAcademicById)
 
 router.post('/',TeacherAcademicController.createTeacherAcademic)
 
-router.put('/:id',middlewareController.verifyTokenAndAdminAuth,TeacherAcademicController.updateTeacherAcademic)
+router.put('/:id',middlewareController.verifyUserAndAdminAuth,TeacherAcademicController.updateTeacherAcademic)
 
-router.delete('/:id',middlewareController.verifyTokenAndAdminAuth,TeacherAcademicController.deleteTeacherAcademic)
+router.patch('/:id',middlewareController.verifyUserAndAdminAuth,TeacherAcademicController.updateTeacherAcademicStatus)
+
+router.delete('/:id',middlewareController.verifyUserAndAdminAuth,TeacherAcademicController.deleteTeacherAcademic)
 
 module.exports = router

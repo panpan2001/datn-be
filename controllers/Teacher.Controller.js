@@ -150,7 +150,12 @@ exports.deleteTeacher = async (req, res, next) => {
     .populate('account_id')
     .populate('id_academic')
     .populate('id_degree');
+    // console.log({teacher})
     if (!teacher) res.status(404).send("Teacher not found")
-    else res.status(200).send("Teacher's deleted").json(teacher);
+    else{ 
+        const newTeachers= await Teacher.find().populate('account_id')
+        res.status(200).json(newTeachers);
+    
+    }
 
 }
