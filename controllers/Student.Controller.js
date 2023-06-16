@@ -1,7 +1,7 @@
 const { Account } = require("../models/Account.Model")
 const { validateStudent, Student } = require("../models/Student.Model")
-
-
+const {DemoCourseStudent} = require("../models/DemoCourseStudent.Model")
+const {CourseStudent}= require("../models/CourseStudent.Model")
 exports.createStudent = async (req, res, next) => {
     const { error } = validateStudent(req.body)
     if (error) {
@@ -62,8 +62,18 @@ exports.updateStudent = async (req, res, next) => {
 
 exports.deleteStudent = async (req, res, next) => {
     const student = await Student.findByIdAndDelete(req.params.id)
+    console.log("student deleted: ", student._id)
     if (!student) res.status(404).send("The student doesn't exist")
-    else res.send(student)
+    else {
+        const account= await Account.findByIdAndDelete(student.account_id._id)
+        console.log("studentaccount  deleted: ", student.account_id._id)
+        const demoCourseStudent= await DemoCourseStudent.deleteMany({id_student: student._id})
+        const courseStudent= await CourseStudent.deleteMany({id_student: student._id})
+        console.log("demoCourseStudent deleted according to student: ", demoCourseStudent)
+        console.log("courseStudent deleted according to student : ", courseStudent)
+        const newStudents= await Student.find().populate('account_id')
+        res.status(200).send(newStudents)
+    }
 }
 
 

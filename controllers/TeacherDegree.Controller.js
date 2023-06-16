@@ -48,6 +48,14 @@ exports.updateTeacherDegree=async(req,res,next)=>{
     else res.send(teacherDegree);
 }
 
+exports.updateTeacherDegreeStatus= async (req, res, next) => {
+    const teacherDegree = await TeacherDegree.findByIdAndUpdate(req.params.id, {
+        degree_status: req.body.degree_status
+    }, { new: true });
+    if(!teacherDegree) res.status(404).send("The teacher degree doesn't exist")
+    else  res.send(teacherDegree);
+}
+
 exports.deleteTeacherDegree=async(req,res,next)=>{
     const teacherDegree = await TeacherDegree.findByIdAndDelete(req.params.id);
     if(!teacherDegree) res.status(404).send("The teacher degree doesn't exist")

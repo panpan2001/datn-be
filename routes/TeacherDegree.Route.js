@@ -9,7 +9,9 @@ router.get('/:id',TeacherDegreeController.getTeacherDegreeById)
 
 router.post('/',TeacherDegreeController.createTeacherDegree)
 
-router.put('/:id',middlewareController.verifyTokenAndAdminAuth,TeacherDegreeController.updateTeacherDegree)
+router.put('/:id',middlewareController.verifyUserAndAdminAuth,TeacherDegreeController.updateTeacherDegree)
+
+router.patch('/:id',middlewareController.verifyUserAndAdminAuth,TeacherDegreeController.updateTeacherDegreeStatus)
 
 router.delete('/:id',middlewareController.verifyTokenAndAdminAuth,TeacherDegreeController.deleteTeacherDegree)
 

@@ -1,20 +1,20 @@
 const { json } = require('express');
 let { Account, validateAccount } = require('../models/Account.Model')
-
-
+let { Student } = require('../models/Student.Model')
+let { Teacher } = require('../models/Teacher.Model')
 //get all accounts
 exports.getAllAccounts = async (req, res, next) => {
 
-        const accounts = await Account.find();
-        console.log(accounts.length)
-        if(!accounts) return res.status(404).send("Accounts not found")
-        else res.status(200).json(accounts);   
+    const accounts = await Account.find();
+    console.log(accounts.length)
+    if (!accounts) return res.status(404).send("Accounts not found")
+    else res.status(200).json(accounts);
 }
 
 //get account by id
 exports.getAccountById = async (req, res, next) => {
     const account = await Account.findById(req.params.id);
-    if(!account) return res.status(404).send("Account not found")
+    if (!account) return res.status(404).send("Account not found")
     else res.send(account);
 }
 
@@ -33,15 +33,37 @@ exports.updateAccount = async (req, res, next) => {
         is_deleted: req.body.is_deleted,
         avatar: req.body.avatar
     }, { new: true });
-    if(!account) return res.status(404).send("Account not found")
+    if (!account) return res.status(404).send("Account not found")
     else res.json(account);
 
 }
 
 exports.deleteAccount = async (req, res, next) => {
-        const account = await Account.findByIdAndDelete(req.params.id);
-        if(!account) return res.status(404).send("Account not found")
-        else res.status(200).send("Account deleted").json(account);
+    const account = await Account.findByIdAndDelete(req.params.id);
+    console.log("account deleted:", account)
+    if (!account) {
+        return res.status(404).send("Account not found")
+    }
+    else {
+        if (account.role_name == 'student') {
+            console.log("student")
+            const student = await Student.findOneAndDelete({ account_id: account._id });
+            console.log({ student })
+            const newAccounts = await Account.find();
+            console.log("newAccounts.length: ", newAccounts.length)
+            res.status(200).send(newAccounts);
+        }
+        else if (account.role_name == 'teacher') {
+            console.log("teacher")
+            const teacher = await Teacher.findOneAndDelete({ account_id: account._id });
+            console.log({ teacher })
+            const newAccounts = await Account.find();
+            console.log("newAccounts.length: ", newAccounts.length)
+            res.status(200).send(newAccounts);
+           
+        }
+       
+    }
 
-   
+
 }
