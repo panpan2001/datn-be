@@ -11,7 +11,9 @@ router.get('/teacher/:id',CourseController.getAllCoursesByIdTeacher)
 
 router.post('/',middlewareController.verifyUserAndAdminAuth,CourseController.createCourse)
 
-router.put('/:id',middlewareController.verifyTokenAndAdminAuth,CourseController.updateCourse)
+router.put('/:id',middlewareController.verifyUserAndAdminAuth,CourseController.updateCourse)
+
+router.patch('/linkVideo/:id',middlewareController.verifyUserAndAdminAuth,CourseController.addLinkVideo)
 
 router.delete('/:id',middlewareController.verifyUserAndAdminAuth,CourseController.deleteCourse)
 
