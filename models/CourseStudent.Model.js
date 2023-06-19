@@ -12,7 +12,12 @@ const courseStudentSchema= mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course',
         required: true
+    },
+    isJudged:{
+        type: Boolean,
+        default: false
     }
+    
 },{
     timestamps: true
 })

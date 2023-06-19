@@ -13,6 +13,10 @@ const demoCourseStudentSchema= mongoose.Schema({
         ref: 'DemoCourse',
         required: true
     },
+    isJudged:{
+        type: Boolean,
+        default: false
+    }
     
 },{
     timestamps: true

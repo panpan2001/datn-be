@@ -13,6 +13,11 @@ const studentRatingSchema= mongoose.Schema({
         ref: 'Student',
         required: true
     },
+    // id_course:{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Course',
+    //     required: true
+    // },
     rating_avg_teacher:{
         type: Number,
         required: true,
@@ -51,20 +56,26 @@ const studentRatingSchema= mongoose.Schema({
     comment:{
         type: String,
         trim: true
+    },
+    isDemo:{
+        type: Boolean,
+        default: false
     }
 },{
     timestamps: true
 })
 function validateStudentRating(studentRating){
     const schema= Joi.object({
-        id_teacher: Joi.objectId().name().required(),
-        id_student: Joi.objectId().name().required(),
+        id_teacher: Joi.objectId().required(),
+        id_student: Joi.objectId().required(),
         rating_avg_teacher: Joi.number().min(0).max(5).required(),
         rating_content_1: Joi.number().min(0).max(5).required(),
         rating_content_2: Joi.number().min(0).max(5).required(),
         rating_content_3: Joi.number().min(0).max(5).required(),
         rating_content_4: Joi.number().min(0).max(5).required(),
-        comment: Joi.string()
+        comment: Joi.string(),
+        // id_course: Joi.objectId().required(),
+        isDemo: Joi.boolean()
     })
     return schema.validate(studentRating)
 }

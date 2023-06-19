@@ -5,12 +5,16 @@ const middlewareController = require('../middlewares/middleware.Controller')
 
 router.get('/',StudentRating.getAllStudentRatings)
 
-router.get('/:id',StudentRating.getStudentRatingById)
+router.get('/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.getStudentRatingById)
 
-router.post('/',middlewareController.verifyTokenAndAdminAuth,StudentRating.createStudentRating)
+router.get('/student/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.getStudentRatingByStudentId)
 
-router.put('/:id',middlewareController.verifyTokenAndAdminAuth,StudentRating.updateStudentRating)
+router.get('/teacher/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.getStudentRatingByTeacherId)
 
-router.delete('/:id',middlewareController.verifyTokenAndAdminAuth,StudentRating.deleteStudentRating)    
+router.post('/',middlewareController.verifyUserAndAdminAuth,StudentRating.createStudentRating)
+
+router.put('/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.updateStudentRating)
+
+router.delete('/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.deleteStudentRating)    
 
 module.exports = router

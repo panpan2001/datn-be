@@ -1,12 +1,16 @@
 const { validateCourseStudent, CourseStudent } = require("../models/CourseStudent.Model")
 const {Student} = require("../models/Student.Model")
 const {Course} = require("../models/Course.Model")
+const { CourseCategory } = require("../models/CourseCategory.Model")
+const { Account } = require("../models/Account.Model")
+const { Teacher } = require("../models/Teacher.Model")
 
 exports.createCourseStudent = async (req, res, next) => {
     console.log("create course student ")
     const courseStudent = new CourseStudent({
         id_student: req.body.id_student,
-        id_course: req.body.id_course
+        id_course: req.body.id_course,
+        isJudged: req.body.isJudged
     })
     await courseStudent.save()
     console.log("course student created: ",{courseStudent})
@@ -57,11 +61,25 @@ exports.getCourseStudentByStudentId=async (req, res, next) => {
         __v: 0
 
     })
-    .populate('id_course',{
-        createdAt: 0,
-        updatedAt: 0,
-        __v: 0
-    })
+    .populate([{
+        path: 'id_course',
+        // select: "id_course name category_id id_teacher ",
+        populate:  [{
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account,
+                }
+            }
+        ]
+    }])
     if(!courseStudent) res.status(404).send("The course student doesn't exist")
     else res.send(courseStudent)
 
@@ -73,7 +91,17 @@ exports.updateCourseStudent = async (req, res, next) => {
     if(error) return res.status(400).send(error.details[0].message)
     const courseStudent = await CourseStudent.findByIdAndUpdate(req.params.id, {
         id_student: req.body.id_student,
-        id_course: req.body.id_course
+        id_course: req.body.id_course,
+        isJudged: req.body.isJudged
+    },
+     { new: true })
+    if(!courseStudent) res.status(404).send("The course student doesn't exist")
+    else res.send(courseStudent)
+}
+
+exports.updateCourseStudentJudged = async (req, res, next) => {
+    const courseStudent = await CourseStudent.findByIdAndUpdate(req.params.id, {
+        isJudged: req.body.isJudged
     },
      { new: true })
     if(!courseStudent) res.status(404).send("The course student doesn't exist")

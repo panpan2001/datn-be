@@ -16,6 +16,8 @@ router.post('/',middlewareController.verifyUserAndAdminAuth,DemoCourseController
 
 router.put('/:id',middlewareController.verifyUserAndAdminAuth,DemoCourseController.updateDemoCourse)
 
+
+
 router.delete('/:id',middlewareController.verifyUserAndAdminAuth,DemoCourseController.deleteDemoCourse)
 
 router.delete('/admin/:id',DemoCourseController.adminDeleteDemoCourse)

@@ -1,6 +1,8 @@
 const { Course } = require("../models/Course.Model")
+const { CourseCategory } = require("../models/CourseCategory.Model")
 const { DemoCourse, validateDemoCourse } = require("../models/DemoCourse.Model")
 const { DemoCourseStudent } = require("../models/DemoCourseStudent.Model")
+const { Teacher } = require("../models/Teacher.Model")
 
 
 exports.createDemoCourse = async (req, res, next) => {
@@ -24,28 +26,41 @@ exports.createDemoCourse = async (req, res, next) => {
 }
 
 exports.getAllDemoCourse = async (req, res, next) => {
-    const courses = await DemoCourse.find().populate('id_course', {
-        start_date: 0,
-        end_date: 0,
-        cost: 0,
-        learning_period: 0,
-        schedule: 0,
-        link_video: 0,
-        link_meeting: 0
-    })
+    const courses = await DemoCourse.find().populate([{
+        path: 'id_course',
+        // select: "id_course name category_id id_teacher ",
+        populate:  [{
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "_id  ",
+            }
+        ]
+    }])
     if (!courses) res.status(404).send("The course doesn't exist")
     else res.send(courses)
 }
 
 exports.getDemoCourseById = async (req, res, next) => {
-    const course = await DemoCourse.findById(req.params.id).populate('id_course', {
-        start_date: 0,
-        end_date: 0,
-        cost: 0,
-        learning_period: 0,
-        link_video: 0,
-        link_meeting: 0
-    })
+    const course = await DemoCourse.findById(req.params.id).populate([{
+        path: 'id_course',
+        // select: "id_course name category_id id_teacher ",
+        populate:  [{
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "_id  ",
+            }
+        ]
+    }])
     if (!course) res.status(404).send("The course doesn't exist")
     else res.send(course)
 }
@@ -56,14 +71,21 @@ exports.getDemoCourseByCourseId = async (req, res, next) => {
 
     // if (!course) res.status(404).send("The course doesn't exist")
 
-    const demoCourse = await DemoCourse.find({ id_course: req.params.id }).populate('id_course', {
-        start_date: 0,
-        end_date: 0,
-        cost: 0,
-        learning_period: 0,
-        link_video: 0,
-        link_meeting: 0
-    })
+    const demoCourse = await DemoCourse.find({ id_course: req.params.id }).populate([{
+        path: 'id_course',
+        // select: "id_course name category_id id_teacher ",
+        populate:  [{
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "_id  ",
+            }
+        ]
+    }])
     // console.log("demoCourse",{demoCourse})
     if (!demoCourse) res.status(404).send("The demo course doesn't exist")
     else res.send(demoCourse)
@@ -75,22 +97,21 @@ exports.getDemoCourseByTeacherId = async (req, res, next) => {
 
     if (!course) res.status(404).send("The course doesn't exist")
 
-    const demoCourse = await DemoCourse.find({ id_course: { $in: course } }).populate('id_course', {
-        start_date: 0,
-        end_date: 0,
-        cost: 0,
-        learning_period: 0,
-        link_video: 0,
-        link_meeting: 0
-    })
-        .populate('id_course', {
-            start_date: 0,
-            end_date: 0,
-            cost: 0,
-            learning_period: 0,
-            link_video: 0,
-            link_meeting: 0
-        })
+    const demoCourse = await DemoCourse.find({ id_course: { $in: course } }).populate([{
+        path: 'id_course',
+        // select: "id_course name category_id id_teacher ",
+        populate:  [{
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "_id  ",
+            }
+        ]
+    }])
 
     if (!demoCourse) res.status(404).send("The demo course doesn't exist")
     else res.send(demoCourse)
