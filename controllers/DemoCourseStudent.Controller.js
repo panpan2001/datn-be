@@ -56,17 +56,22 @@ exports.getDemoCourseStudentByStudentId = async (req, res, next) => {
             updatedAt: 0,
             __v: 0
         })
-        .populate([{
+        .populate(
+            [
+                {
             path: 'id_demo_course',
             populate: {
                 path: 'id_course',
                 model: Course,
                 select: "id_course name  ",
-                populate: [{
+                populate: 
+                [
+                    {
                     path: 'category_id',
                     model: CourseCategory,
                     select: "_id category_name type level "
-                }, {
+                },
+                 {
                     path: 'id_teacher',
                     model: Teacher,
                     // select: "id_teacher  ",
@@ -76,7 +81,9 @@ exports.getDemoCourseStudentByStudentId = async (req, res, next) => {
                     }
                 }]
             }
-        }])
+        }
+    ]
+    )
 
     if (!demoCourseStudent) res.status(404).send("The course student doesn't exist")
     else res.send(demoCourseStudent)

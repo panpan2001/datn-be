@@ -25,7 +25,8 @@ exports.createTeacher = async (req, res, next) => {
             // id_parent_rate: req.body.id_parent_rate,
             // id_course: req.body.id_course,
             id_academic: req.body.id_academic,
-            id_degree: req.body.id_degree
+            id_degree: req.body.id_degree,
+            // studentRating: req.body.studentRating
         })
         await teacher.save();
         console.log("create teacher: ",teacher)
@@ -118,7 +119,8 @@ exports.updateTeacher = async (req, res, next) => {
         // id_parent_rate: req.body.id_parent_rate,
         // id_course: req.body.id_course,
         id_academic: req.body.id_academic,
-        id_degree: req.body.id_degree
+        id_degree: req.body.id_degree,
+        // studentRating: req.body.studentRating
     },
         { new: true });
     if (!teacher) return res.status(404).send("Teacher not found")

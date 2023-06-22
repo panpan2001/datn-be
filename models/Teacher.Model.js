@@ -48,9 +48,16 @@ const teacherSchema= mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'TeacherDegree',
         required: true
-    }
+    },
 // ]
-
+// studentRating:[
+//     {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'StudentRating',
+//         // required: true
+//         default:0
+//     }
+// ]
 
 },{
     timestamps: true
@@ -66,8 +73,9 @@ function validateTeacher(teacher){
         // id_course: Joi.array().items(Joi.objectId()),
         id_academic: Joi.objectId().required(),
         // Joi.array().items(Joi.objectId().required()),
-        id_degree: Joi.objectId().required()
+        id_degree: Joi.objectId().required(),
         // Joi.array().items(Joi.objectId().required())
+        // studentRating: Joi.array().items(Joi.objectId())
     })
     return schema.validate(teacher)
 }

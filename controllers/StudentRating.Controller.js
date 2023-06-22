@@ -23,6 +23,11 @@ exports.createStudentRating = async (req, res, next) => {
             // id_course: req.body.id_course,
             isDemo: req.body.isDemo
         })
+        // const newTeacherRating= await Teacher.findByIdAndUpdate(req.body.id_teacher,{
+        //     $push:{
+        //         studentRating:studentRating._id
+        //     }
+        // })
         await studentRating.save()
         res.send(studentRating)
     // }

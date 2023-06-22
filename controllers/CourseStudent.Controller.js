@@ -25,36 +25,6 @@ exports.getAllCourseStudents = async (req, res, next) => {
         __v: 0
 
     })
-    .populate('id_course',{
-        createdAt: 0,
-        updatedAt: 0,
-        __v: 0
-    })
-    if(!courseStudents) res.status(404).send("The course student doesn't exist")
-    else res.send(courseStudents)
-}
-
-exports.getCourseStudentById = async (req, res, next) => {
-    
-    const courseStudent = await CourseStudent.findById(req.params.id)
-    .populate('id_student',{
-        createdAt: 0,
-        updatedAt: 0,
-        __v: 0
-
-    })
-    .populate('id_course',{
-        createdAt: 0,
-        updatedAt: 0,
-        __v: 0
-    })
-    if(!courseStudent) res.status(404).send("The course student doesn't exist")
-    else res.send(courseStudent)
-}
-
-
-exports.getCourseStudentByStudentId=async (req, res, next) => {
-    const courseStudent = await CourseStudent.find({id_student:req.params.id})
     .populate('id_student',{
         createdAt: 0,
         updatedAt: 0,
@@ -63,8 +33,10 @@ exports.getCourseStudentByStudentId=async (req, res, next) => {
     })
     .populate([{
         path: 'id_course',
+        model: Course,
         // select: "id_course name category_id id_teacher ",
-        populate:  [{
+        populate:  [
+            {
                 path: 'category_id',
                 model: CourseCategory,
                 select: "_id category_name type level "
@@ -80,6 +52,81 @@ exports.getCourseStudentByStudentId=async (req, res, next) => {
             }
         ]
     }])
+    if(!courseStudents) res.status(404).send("The course student doesn't exist")
+    else res.send(courseStudents)
+}
+
+exports.getCourseStudentById = async (req, res, next) => {
+    
+    const courseStudent = await CourseStudent.findById(req.params.id)
+    .populate('id_student',{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+
+    })
+    .populate('id_student',{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+
+    })
+    .populate([{
+        path: 'id_course',
+        model: Course,
+        // select: "id_course name category_id id_teacher ",
+        populate:  [
+            {
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account,
+                }
+            }
+        ]
+    }])
+    if(!courseStudent) res.status(404).send("The course student doesn't exist")
+    else res.send(courseStudent)
+}
+
+
+exports.getCourseStudentByStudentId=async (req, res, next) => {
+    const courseStudent = await CourseStudent.find({id_student:req.params.id})
+    .populate('id_student',{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+
+    })
+    .populate([{
+        path: 'id_course',
+        model: Course,
+        // select: "id_course name  ",
+        populate:  [
+            {
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account,
+                }
+            }
+        ]
+    }])
+    console.log(courseStudent)
     if(!courseStudent) res.status(404).send("The course student doesn't exist")
     else res.send(courseStudent)
 
@@ -95,6 +142,33 @@ exports.updateCourseStudent = async (req, res, next) => {
         isJudged: req.body.isJudged
     },
      { new: true })
+     .populate('id_student',{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+
+    })
+    .populate([{
+        path: 'id_course',
+        model: Course,
+        // select: "id_course name category_id id_teacher ",
+        populate:  [
+            {
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account,
+                }
+            }
+        ]
+    }])
     if(!courseStudent) res.status(404).send("The course student doesn't exist")
     else res.send(courseStudent)
 }
@@ -104,6 +178,33 @@ exports.updateCourseStudentJudged = async (req, res, next) => {
         isJudged: req.body.isJudged
     },
      { new: true })
+     .populate('id_student',{
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+
+    })
+    .populate([{
+        path: 'id_course',
+        model: Course,
+        // select: "id_course name category_id id_teacher ",
+        populate:  [
+            {
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account,
+                }
+            }
+        ]
+    }])
     if(!courseStudent) res.status(404).send("The course student doesn't exist")
     else res.send(courseStudent)
 }
@@ -113,6 +214,33 @@ exports.deleteCourseStudent = async (req, res, next) => {
     if(!courseStudent) res.status(404).send("The course student doesn't exist")
     else {
         const coursesStudent = await CourseStudent.find({id_student: courseStudent.id_student})
+        .populate('id_student',{
+            createdAt: 0,
+            updatedAt: 0,
+            __v: 0
+    
+        })
+        .populate([{
+            path: 'id_course',
+            model: Course,
+            // select: "id_course name category_id id_teacher ",
+            populate:  [
+                {
+                    path: 'category_id',
+                    model: CourseCategory,
+                    select: "_id category_name type level "
+                },
+                {
+                    path: 'id_teacher',
+                    model: Teacher,
+                    select: "_id  ",
+                    populate: {
+                        path: 'account_id',
+                        model: Account,
+                    }
+                }
+            ]
+        }])
         res.send(coursesStudent)
     }
 }
