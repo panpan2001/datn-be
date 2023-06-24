@@ -57,7 +57,14 @@ exports.getCourseById = async (req, res, next) => {
 
     const course = await Course.findById(req.params.id)
         .populate('category_id')
-        .populate('id_teacher');
+        .populate([{
+            path: 'id_teacher',
+            model: Teacher,
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+        }]);
     if (!course) res.status(404).send("The course doesn't exist")
     else res.send(course);
     // console.log({course})
@@ -67,7 +74,16 @@ exports.getCourseById = async (req, res, next) => {
 exports.getAllCoursesByIdTeacher = async (req, res, next) => {
     const courses = await Course.find({ id_teacher: req.params.id })
         .populate('category_id')
-        .populate('id_teacher');
+        .populate([
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
+            }
+        ]);
     if (!courses) res.status(404).send("The course doesn't exist")
     else res.status(200).send(courses);
     console.log(courses)

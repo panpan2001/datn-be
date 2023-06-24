@@ -10,7 +10,7 @@ const options = {
 };
 const payload = {
  apikey: API_KEY,
- permissions: [`allow_join`], // `ask_join` || `allow_mod` 
+ permissions: [`allow_join`,`ask_join`,`allow_mod`], // `ask_join` || `allow_mod` 
  version: 2,
  roles: ['CRAWLER'],
 };

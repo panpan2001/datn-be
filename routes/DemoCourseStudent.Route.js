@@ -17,7 +17,7 @@ router.post('/',middlewareController.verifyToken,checkDemoCourseStudent.checkDup
 
 router.put('/:id',middlewareController.verifyToken,DemoCourseStudentController.updateDemoCourseStudent)
 
-router.patch('/:id',middlewareController.verifyUserAndAdminAuth,DemoCourseStudentController.updateDemoCourseJudge)
+router.patch('/:id',DemoCourseStudentController.updateDemoCourseJudge)
 
 
 router.delete('/:id',middlewareController.verifyUserAndAdminAuth,DemoCourseStudentController.deleteDemoCourseStudent)

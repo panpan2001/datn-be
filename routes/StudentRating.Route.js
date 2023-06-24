@@ -5,7 +5,7 @@ const middlewareController = require('../middlewares/middleware.Controller')
 
 router.get('/',StudentRating.getAllStudentRatings)
 
-router.get('/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.getStudentRatingById)
+router.get('/:id',StudentRating.getStudentRatingById)
 
 router.get('/student/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.getStudentRatingByStudentId)
 
@@ -14,6 +14,8 @@ router.get('/teacher/:id',middlewareController.verifyUserAndAdminAuth,StudentRat
 router.post('/',middlewareController.verifyUserAndAdminAuth,StudentRating.createStudentRating)
 
 router.put('/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.updateStudentRating)
+
+router.patch('/:id',StudentRating.updateStudentRatingPatch)
 
 router.delete('/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.deleteStudentRating)    
 

@@ -1,4 +1,9 @@
 const { Account } = require('../models/Account.Model')
+const { Course } = require('../models/Course.Model')
+const { CourseCategory } = require('../models/CourseCategory.Model')
+const { CourseStudent } = require('../models/CourseStudent.Model')
+const { DemoCourse } = require('../models/DemoCourse.Model')
+const { DemoCourseStudent } = require('../models/DemoCourseStudent.Model')
 const { Student } = require('../models/Student.Model')
 const { StudentRating, validateStudentRating } = require('../models/StudentRating.Model')
 const { Teacher } = require('../models/Teacher.Model')
@@ -20,7 +25,7 @@ exports.createStudentRating = async (req, res, next) => {
             rating_content_3: req.body.rating_content_3,
             rating_content_4: req.body.rating_content_4,
             comment: req.body.comment,
-            // id_course: req.body.id_course,
+            id_course: req.body.id_course,
             isDemo: req.body.isDemo
         })
         // const newTeacherRating= await Teacher.findByIdAndUpdate(req.body.id_teacher,{
@@ -28,6 +33,37 @@ exports.createStudentRating = async (req, res, next) => {
         //         studentRating:studentRating._id
         //     }
         // })
+        if(req.body.isDemo== true){
+            let demoStudentRating= await DemoCourseStudent
+            .find({
+                id_student:req.body.id_student,
+            isJudged: false},
+                ).populate([{
+                    path:"id_demo_course",
+                    model:DemoCourse,
+                    populate:[
+                        {
+                            path:"id_course",
+                            model:Course
+                        }
+                    ]
+                }])
+               demoStudentRating= demoStudentRating.filter(i=>i.id_demo_course.id_course._id==req.body.id_course)[0]
+               console.log({demoStudentRating})
+               demoStudentRating= await demoStudentRating.updateOne({isJudged: true},)
+
+            console.log({demoStudentRating})
+            if(!demoStudentRating) res.status(404).send("The demo student rating can not  update isJudged ")
+        }
+        else{
+            const studentRating= await CourseStudent.findOneAndUpdate({
+                id_course:req.body.id_course,
+                id_student:req.body.id_student},{
+                    isJudged: true
+            })
+            console.log({studentRating})
+            if(!studentRating) res.status(404).send("The student rating can not  update isJudged ")
+        }
         await studentRating.save()
         res.send(studentRating)
     // }
@@ -35,17 +71,92 @@ exports.createStudentRating = async (req, res, next) => {
 
 exports.getAllStudentRatings = async (req, res, next) => {
     const studentRatings = await StudentRating.find()
+    .populate([{
+        path: 'id_teacher',
+        model: Teacher,
+        // select: "_id  ",
+        populate: {
+            path: 'account_id',
+            model: Account
+        }
+    },{
+        path: 'id_student',
+        model: Student,
+        // select: "_id  ",
+        populate: {
+            path: 'account_id',
+            model: Account
+        }
+    },{
+        path: 'id_course',
+        model: Course,
+        // select: "_id  ",
+        populate: {
+            path: 'category_id',
+            model: CourseCategory
+        }
+    }])
     if (!studentRatings) res.status(404).send("The student rating doesn't exist")
     else res.send(studentRatings)
 }
 
 exports.getStudentRatingById = async (req, res, next) => {
     const studentRating = await StudentRating.findById(req.params.id)
+    .populate([{
+        path: 'id_teacher',
+        model: Teacher,
+        // select: "_id  ",
+        populate: {
+            path: 'account_id',
+            model: Account
+        }
+    },{
+        path: 'id_student',
+        model: Student,
+        // select: "_id  ",
+        populate: {
+            path: 'account_id',
+            model: Account
+        }
+    },{
+        path: 'id_course',
+        model: Course,
+        // select: "_id  ",
+        populate: {
+            path: 'category_id',
+            model: CourseCategory
+        }
+    }])
     if (!studentRating) res.status(404).send("The student rating doesn't exist")
     else res.send(studentRating)
 }
 exports.getStudentRatingByStudentId = async (req, res, next) => {
     const studentRating = await StudentRating.find({id_student:req.params.id})
+    .populate([{
+        path: 'id_teacher',
+        model: Teacher,
+        // select: "_id  ",
+        populate: {
+            path: 'account_id',
+            model: Account
+        }
+    },{
+        path: 'id_student',
+        model: Student,
+        // select: "_id  ",
+        populate: {
+            path: 'account_id',
+            model: Account
+        }
+    },{
+        path: 'id_course',
+        model: Course,
+        // select: "_id  ",
+        populate: {
+            path: 'category_id',
+            model: CourseCategory
+        }
+    }])
     if (!studentRating) res.status(404).send("The student rating doesn't exist")
     else res.send(studentRating)
 }
@@ -54,6 +165,31 @@ exports.getStudentRatingByTeacherId = async (req, res, next) => {
     const studentRating = await StudentRating.find({id_teacher:req.params.id},{
 
     })
+    .populate([{
+        path: 'id_teacher',
+        model: Teacher,
+        // select: "_id  ",
+        populate: {
+            path: 'account_id',
+            model: Account
+        }
+    },{
+        path: 'id_student',
+        model: Student,
+        // select: "_id  ",
+        populate: {
+            path: 'account_id',
+            model: Account
+        }
+    },{
+        path: 'id_course',
+        model: Course,
+        // select: "_id  ",
+        populate: {
+            path: 'category_id',
+            model: CourseCategory
+        }
+    }])
     if (!studentRating) res.status(404).send("The student rating doesn't exist")
     else res.send(studentRating)
 }
@@ -71,8 +207,20 @@ exports.updateStudentRating = async (req, res, next) => {
         rating_content_3: req.body.rating_content_3,
         rating_content_4: req.body.rating_content_4,
         comment: req.body.comment,
-        // id_course: req.body.id_course,
+        id_course: req.body.id_course,
         isDemo: req.body.isDemo
+    },
+        { new: true })
+    if (!studentRating) res.status(404).send("The student rating doesn't exist")
+    else res.send(studentRating)
+
+}
+
+exports.updateStudentRatingPatch = async (req, res, next) => {
+
+    const studentRating = await StudentRating.findByIdAndUpdate(req.params.id, {
+       
+        id_course: req.body.id_course
     },
         { new: true })
     if (!studentRating) res.status(404).send("The student rating doesn't exist")

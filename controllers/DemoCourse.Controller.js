@@ -1,3 +1,4 @@
+const { Account } = require("../models/Account.Model")
 const { Course } = require("../models/Course.Model")
 const { CourseCategory } = require("../models/CourseCategory.Model")
 const { DemoCourse, validateDemoCourse } = require("../models/DemoCourse.Model")
@@ -38,6 +39,10 @@ exports.getAllDemoCourse = async (req, res, next) => {
                 path: 'id_teacher',
                 model: Teacher,
                 // select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
             }
         ]
     }])
@@ -58,6 +63,10 @@ exports.getDemoCourseById = async (req, res, next) => {
                 path: 'id_teacher',
                 model: Teacher,
                 // select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
             }
         ]
     }])
@@ -83,6 +92,10 @@ exports.getDemoCourseByCourseId = async (req, res, next) => {
                 path: 'id_teacher',
                 model: Teacher,
                 // select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
             }
         ]
     }])
@@ -109,6 +122,10 @@ exports.getDemoCourseByTeacherId = async (req, res, next) => {
                 path: 'id_teacher',
                 model: Teacher,
                 // select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
             }
         ]
     }])

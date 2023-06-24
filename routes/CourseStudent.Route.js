@@ -18,7 +18,7 @@ CourseStudent.createCourseStudent)
 
 router.put('/:id',middlewareController.verifyUserAndAdminAuth,CourseStudent.updateCourseStudent)
 
-router.patch('/:id',middlewareController.verifyUserAndAdminAuth,CourseStudent.updateCourseStudentJudged)
+router.patch('/:id',CourseStudent.updateCourseStudentJudged)
 
 
 router.delete('/:id',middlewareController.verifyUserAndAdminAuth,CourseStudent.deleteCourseStudent)
