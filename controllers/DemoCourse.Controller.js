@@ -30,20 +30,20 @@ exports.getAllDemoCourse = async (req, res, next) => {
     const courses = await DemoCourse.find().populate([{
         path: 'id_course',
         // select: "id_course name category_id id_teacher ",
-        populate:  [{
-                path: 'category_id',
-                model: CourseCategory,
-                select: "_id category_name type level "
-            },
-            {
-                path: 'id_teacher',
-                model: Teacher,
-                // select: "_id  ",
-                populate: {
-                    path: 'account_id',
-                    model: Account
-                }
+        populate: [{
+            path: 'category_id',
+            model: CourseCategory,
+            select: "_id category_name type level "
+        },
+        {
+            path: 'id_teacher',
+            model: Teacher,
+            // select: "_id  ",
+            populate: {
+                path: 'account_id',
+                model: Account
             }
+        }
         ]
     }])
     if (!courses) res.status(404).send("The course doesn't exist")
@@ -54,20 +54,20 @@ exports.getDemoCourseById = async (req, res, next) => {
     const course = await DemoCourse.findById(req.params.id).populate([{
         path: 'id_course',
         // select: "id_course name category_id id_teacher ",
-        populate:  [{
-                path: 'category_id',
-                model: CourseCategory,
-                select: "_id category_name type level "
-            },
-            {
-                path: 'id_teacher',
-                model: Teacher,
-                // select: "_id  ",
-                populate: {
-                    path: 'account_id',
-                    model: Account
-                }
+        populate: [{
+            path: 'category_id',
+            model: CourseCategory,
+            select: "_id category_name type level "
+        },
+        {
+            path: 'id_teacher',
+            model: Teacher,
+            // select: "_id  ",
+            populate: {
+                path: 'account_id',
+                model: Account
             }
+        }
         ]
     }])
     if (!course) res.status(404).send("The course doesn't exist")
@@ -83,20 +83,20 @@ exports.getDemoCourseByCourseId = async (req, res, next) => {
     const demoCourse = await DemoCourse.find({ id_course: req.params.id }).populate([{
         path: 'id_course',
         // select: "id_course name category_id id_teacher ",
-        populate:  [{
-                path: 'category_id',
-                model: CourseCategory,
-                select: "_id category_name type level "
-            },
-            {
-                path: 'id_teacher',
-                model: Teacher,
-                // select: "_id  ",
-                populate: {
-                    path: 'account_id',
-                    model: Account
-                }
+        populate: [{
+            path: 'category_id',
+            model: CourseCategory,
+            select: "_id category_name type level "
+        },
+        {
+            path: 'id_teacher',
+            model: Teacher,
+            // select: "_id  ",
+            populate: {
+                path: 'account_id',
+                model: Account
             }
+        }
         ]
     }])
     // console.log("demoCourse",{demoCourse})
@@ -113,20 +113,20 @@ exports.getDemoCourseByTeacherId = async (req, res, next) => {
     const demoCourse = await DemoCourse.find({ id_course: { $in: course } }).populate([{
         path: 'id_course',
         // select: "id_course name category_id id_teacher ",
-        populate:  [{
-                path: 'category_id',
-                model: CourseCategory,
-                select: "_id category_name type level "
-            },
-            {
-                path: 'id_teacher',
-                model: Teacher,
-                // select: "_id  ",
-                populate: {
-                    path: 'account_id',
-                    model: Account
-                }
+        populate: [{
+            path: 'category_id',
+            model: CourseCategory,
+            select: "_id category_name type level "
+        },
+        {
+            path: 'id_teacher',
+            model: Teacher,
+            // select: "_id  ",
+            populate: {
+                path: 'account_id',
+                model: Account
             }
+        }
         ]
     }])
 
@@ -150,13 +150,63 @@ exports.updateDemoCourse = async (req, res, next) => {
     else res.send(course)
 }
 
+exports.addLinkVideo = async (req, res, next) => {
+    // console.log("id  democourse add", req.params.id)
+    if (req.body.type === "Video") {
+        const course = await DemoCourse.findByIdAndUpdate(req.params.id, {
+            $pullAll: {
+                link_video: req.body.del_link_video
+
+            }
+        })
+
+        const newcourse = await DemoCourse.findByIdAndUpdate(req.params.id, {
+            $addToSet:
+            {
+                link_video:
+                {
+                    $each: req.body.link_video,
+                }
+            }
+        }
+        )
+        console.log("course link video demo course ", newcourse.link_video)
+
+        if (!newcourse) res.status(404).send("The course doesn't exist")
+        else res.send(newcourse)
+        console.log("course link video demo course ", newcourse.link_video)
+    }
+    else {
+        const course = await DemoCourse.findByIdAndUpdate(req.params.id, {
+            $pullAll: {
+                link_meeting: req.body.del_link_meeting
+            }
+        })
+        const newcourse = await DemoCourse.findByIdAndUpdate(req.params.id, {
+            $addToSet:
+            {
+                link_meeting:
+                {
+                    $each: req.body.link_video,
+                }
+            }
+        }
+        )
+        console.log("course link video demo course ", newcourse.link_meeting)
+
+        if (!newcourse) res.status(404).send("The course doesn't exist")
+        else res.send(newcourse)
+        console.log("course link video demo course ", newcourse.link_meeting)
+    }
+}
+
 exports.deleteDemoCourse = async (req, res, next) => {
     // console.log("id  democourse delete", req.params.id)
     const demoCourse = await DemoCourse.findByIdAndDelete(req.params.id)
     // console.log({ demoCourse })
     // const demoCourseStudent = await DemoCourseStudent.findOne({ id_demo_course: req.params.id })
     // if (demoCourseStudent) {
-        await DemoCourseStudent.deleteMany({ id_demo_course: req.params.id })
+    await DemoCourseStudent.deleteMany({ id_demo_course: req.params.id })
     // }
     if (!demoCourse) res.status(404).send("The course doesn't exist")
     else {
@@ -177,13 +227,13 @@ exports.adminDeleteDemoCourse = async (req, res, next) => {
     // console.log("id  democourse delete",req.params.id)
     const demoCourse = await DemoCourse.findByIdAndDelete(req.params.id)
     // const demoCourse = await DemoCourse.findById(req.params.id)
-    console.log("demo course id ", demoCourse._id )
+    console.log("demo course id ", demoCourse._id)
     // const demoCourseStudent = await DemoCourseStudent.findOne({ id_demo_course: req.params.id })
     // console.log({ demoCourseStudent })
     // if (demoCourseStudent) {
-        
-       const a=  await DemoCourseStudent.deleteMany({ id_demo_course: req.params.id })
-       console.log("a",a)
+
+    const a = await DemoCourseStudent.deleteMany({ id_demo_course: req.params.id })
+    console.log("a", a)
     // const test= await DemoCourseStudent.find({ id_demo_course: req.params.id })
     //    console.log("test",test,test.length)
     // }
@@ -199,7 +249,7 @@ exports.adminDeleteDemoCourse = async (req, res, next) => {
                 link_meeting: 0
             })
         res.status(200).send(newDemoCourse)
-        console.log("newDemoCourse.length:",newDemoCourse.length )
+        console.log("newDemoCourse.length:", newDemoCourse.length)
     }
 }
 

@@ -16,7 +16,7 @@ router.post('/',middlewareController.verifyUserAndAdminAuth,DemoCourseController
 
 router.put('/:id',middlewareController.verifyUserAndAdminAuth,DemoCourseController.updateDemoCourse)
 
-
+router.patch('/linkVideo/:id',middlewareController.verifyUserAndAdminAuth,DemoCourseController.addLinkVideo)
 
 router.delete('/:id',middlewareController.verifyUserAndAdminAuth,DemoCourseController.deleteDemoCourse)
 

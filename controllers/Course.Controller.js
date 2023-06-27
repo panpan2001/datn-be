@@ -29,7 +29,7 @@ exports.createCourse = async (req, res, next) => {
         cost: req.body.cost,
         image: req.body.image,
         link_video: req.body.link_video,
-        link_meeting: req.body.link_meeting
+        link_meeeting: req.body.link_meeeting
     });
     await course.save();
     res.send(course);
@@ -107,7 +107,7 @@ exports.updateCourse = async (req, res, next) => {
         cost: req.body.cost,
         image: req.body.image,
         link_video: req.body.link_video,
-        link_meeting: req.body.link_meeting
+        link_meeeting: req.body.link_meeeting
     },
         { new: true });
     if (!course) res.status(404).send("The course doesn't exist")
@@ -116,34 +116,66 @@ exports.updateCourse = async (req, res, next) => {
 
 
 exports.addLinkVideo = async (req, res, next) => {
-    console.log(req.body)
+    // console.log(req.body)
     // if (req.body.del_link_video.length > 0) {
-    const course = await Course.findOneAndUpdate({ _id: req.params.id },
-        {
-            $pullAll: {
-                link_video: req.body.del_link_video
-
-            }
-        }
-
-    );
-
-    const newcourse = await Course.findByIdAndUpdate(req.params.id,
-        {
-            $addToSet:
-            {
-                link_video:
+        if(req.body.type=='Video'){
+            const course = await Course.findOneAndUpdate({ _id: req.params.id },
                 {
-                    $each: req.body.link_video,
-                    // $slice: 0, 
+                    $pullAll: {
+                        link_video: req.body.del_link_video
+        
+                    }
                 }
+        
+            );
+        
+            const newcourse = await Course.findByIdAndUpdate(req.params.id,
+                {
+                    $addToSet:
+                    {
+                        link_video:
+                        {
+                            $each: req.body.link_video,
+                            // $slice: 0, 
+                        }
+                    }
+                })
+            if (!newcourse) res.status(404).send("The course doesn't exist")
+            else {
+                res.send(newcourse).status(200);
+                // console.log("course link video ", newcourse.link_video)
             }
-        })
-    if (!newcourse) res.status(404).send("The course doesn't exist")
-    else {
-        res.send(newcourse).status(200);
-        console.log("course link video ", newcourse.link_video)
-    }
+                }
+                else{
+                    console.log(req.body)
+                    const course = await Course.findOneAndUpdate({ _id: req.params.id },
+                        {
+                            $pullAll: {
+                                link_meeeting: req.body.del_link_video
+                
+                            }
+                        }
+                
+                    );
+                
+                    const newcourse = await Course.findByIdAndUpdate(req.params.id,
+                        {
+                            $addToSet:
+                            {
+                                link_meeeting:
+                                {
+                                    $each: req.body.link_video,
+                                    // $slice: 0, 
+                                }
+                            }
+                        })
+                    if (!newcourse) res.status(404).send("The course doesn't exist")
+                    else {
+                        res.send(newcourse).status(200);
+                        console.log("course link meeting ", newcourse.link_meeeting)
+                    }
+                }
+  
 }
 // else {
 //     const newcourse = await Course.findByIdAndUpdate(req.params.id,

@@ -94,7 +94,7 @@ function validateCourse(course){
         cost: Joi.number().min(20000).max(5000000).required(),
         image: Joi.string(),
         link_video: Joi.array().items(Joi.string().required()),
-        link_meeting: Joi.array().items(Joi.string().required()),
+        link_meeeting: Joi.array().items(Joi.string().required()),
     })
     return schema.validate(course)
 }
