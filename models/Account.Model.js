@@ -48,7 +48,11 @@ const accountSchema= mongoose.Schema({
     },
     avatar:{
         type:String,
-    }
+    },
+    messageFromSystem:[{
+        type: String,
+        default:""
+    }]
 },{
     timestamps: true
 })
@@ -64,7 +68,8 @@ function validateAccount(account){
         phone_number:Joi.string().min(10).max(20).required(),
         password: Joi.string().min(6).required(),
         is_deleted:Joi.boolean(),
-        avatar:Joi.string()
+        avatar:Joi.string(),
+        messageFromSystem:Joi.array(Joi.string())
     })
     return schema.validate(account)
 }

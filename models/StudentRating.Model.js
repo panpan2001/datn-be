@@ -1,6 +1,7 @@
 const mongoose= require('mongoose')
 const Joi = require('@hapi/joi')
 Joi.objectId = require('joi-objectid')(Joi)
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 const studentRatingSchema= mongoose.Schema({
    
     id_teacher:{
@@ -60,7 +61,19 @@ const studentRatingSchema= mongoose.Schema({
     isDemo:{
         type: Boolean,
         default: false
-    }
+    },
+    isBadJudge:{
+        type: Boolean,
+        default: false
+    },
+    countBadJudge:{
+        type: Number,
+        default: 0
+    },
+    messageFromSystem:[{
+        type:String,
+        default:""
+    }]
 },{
     timestamps: true
 })
@@ -75,11 +88,18 @@ function validateStudentRating(studentRating){
         rating_content_4: Joi.number().min(0).max(5).required(),
         comment: Joi.string(),
         id_course: Joi.objectId().required(),
-        isDemo: Joi.boolean()
+        isDemo: Joi.boolean(),
+        isBadJudge: Joi.boolean(),
+        countBadJudge: Joi.number(),
+        messageFromSystem: Joi.array().items(Joi.string())
     })
     return schema.validate(studentRating)
 }
 const StudentRating= mongoose.model("StudentRating",studentRatingSchema)
-
+studentRatingSchema.plugin(AutoIncrement,
+     {inc_field: 'countBadJudge'}, 
+     {disable_hooks: true},
+     {start_seq: 0}
+     );
 exports.StudentRating= StudentRating
 exports.validateStudentRating= validateStudentRating

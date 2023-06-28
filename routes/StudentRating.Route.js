@@ -15,7 +15,9 @@ router.post('/',middlewareController.verifyUserAndAdminAuth,StudentRating.create
 
 router.put('/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.updateStudentRating)
 
-router.patch('/:id',StudentRating.updateStudentRatingPatch)
+router.patch('/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.updateStudentRatingPatch)
+
+router.patch('/sendWarning/:id',StudentRating.updateQualityOfStudentRating)
 
 router.delete('/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.deleteStudentRating)    
 

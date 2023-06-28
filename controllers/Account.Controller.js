@@ -31,11 +31,26 @@ exports.updateAccount = async (req, res, next) => {
         phone_number: req.body.phone_number,
         password: req.body.password,
         is_deleted: req.body.is_deleted,
-        avatar: req.body.avatar
+        avatar: req.body.avatar,
+        messageFromSystem: req.body.messageFromSystem
     }, { new: true });
     if (!account) return res.status(404).send("Account not found")
     else res.json(account);
 
+}
+
+exports.updateAccountStatus = async (req, res, next) => {
+    // const find= await Account.findById(req.params.id);
+    //check account student dc mo khoa thi cac danh gia se tra ve 0 va false 
+    console.log("req.body.is_deleted",req.body.is_deleted)
+    const account = await Account.findByIdAndUpdate(req.params.id, {
+        is_deleted: !req.body.is_deleted
+    }, { new: true });
+    if (!account) return res.status(404).send("Account not found")
+    else {
+        const newAccounts = await Account.find();
+        res.status(200).send(newAccounts);
+    }
 }
 
 exports.deleteAccount = async (req, res, next) => {
@@ -50,6 +65,8 @@ exports.deleteAccount = async (req, res, next) => {
             const student = await Student.findOneAndDelete({ account_id: account._id });
             console.log({ student })
             const newAccounts = await Account.find();
+            // const course_student= await CourseStudent.deleteMany({id_student: student._id})
+            // const demo_course_student= await DemoCourseStudent.deleteMany({id_student: student._id})
             console.log("newAccounts.length: ", newAccounts.length)
             res.status(200).send(newAccounts);
         }
