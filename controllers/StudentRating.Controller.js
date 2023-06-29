@@ -216,11 +216,16 @@ exports.updateStudentRating = async (req, res, next) => {
         isDemo: req.body.isDemo,
         isBadJudge: req.body.isBadJudge,
         countBadJudge: req.body.countBadJudge,
-        messageFromSystem: req.body.messageFromSystem
+        messageFromSystem: req.body.messageFromSystem,
+        studentUpdatedAt: req.body.studentUpdatedAt
     },
         { new: true })
     if (!studentRating) res.status(404).send("The student rating doesn't exist")
-    else res.send(studentRating)
+    
+    else {
+        console.log("updateStudentRating",studentRating)
+        res.send(studentRating)
+    }
 
 }
 
@@ -231,6 +236,31 @@ exports.updateStudentRatingPatch = async (req, res, next) => {
         id_course: req.body.id_course
     },
         { new: true })
+        .populate([{
+            path: 'id_teacher',
+            model: Teacher,
+            // select: "_id  ",
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+        }, {
+            path: 'id_student',
+            model: Student,
+            // select: "_id  ",
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+        }, {
+            path: 'id_course',
+            model: Course,
+            // select: "_id  ",
+            populate: {
+                path: 'category_id',
+                model: CourseCategory
+            }
+        }])
     if (!studentRating) res.status(404).send("The student rating doesn't exist")
     else res.send(studentRating)
 
@@ -292,7 +322,8 @@ exports.updateQualityOfStudentRating = async (req, res, next) => {
         if (!studentRating) res.status(404).send("Can't update student rating to bad judge")
         else {
             const countBadJudge = studentRating.countBadJudge
-            if (countBadJudge < 2) {
+            if (countBadJudge < 2)
+             {
                 // account isblocked tio true and send auto  message: "bad judge 2 time "" 
               let number_of_bad_judge= await StudentRating.find({id_student:studentRating.id_student})
               number_of_bad_judge= number_of_bad_judge.filter(item=>item.isBadJudge==true)
@@ -314,7 +345,7 @@ exports.updateQualityOfStudentRating = async (req, res, next) => {
                 
             }
             else {
-                console.log("bad judge 2 time")
+                console.log("bad judge 2 time or more :", studentRating.countBadJudge)
                 const student= await Student.findById(studentRating.id_student)
                 const account = await Account.findByIdAndUpdate(student.account_id._id,
                     {
@@ -380,6 +411,75 @@ exports.updateQualityOfStudentRating = async (req, res, next) => {
         else res.send(studentRating)
     }
 
+}
+
+
+exports.changeAppearanceStudentRating = async (req, res, next) => {
+    let studentRating = null
+    if(req.body.flag){
+        studentRating = await StudentRating.findByIdAndUpdate(req.params.id,{
+            isBadJudge: !req.body.isBadJudge,
+        })
+        studentRating = await StudentRating.find()
+        .populate([{
+            path: 'id_teacher',
+            model: Teacher,
+            // select: "_id  ",
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+        }, {
+            path: 'id_student',
+            model: Student,
+            // select: "_id  ",
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+        }, {
+            path: 'id_course',
+            model: Course,
+            // select: "_id  ",
+            populate: {
+                path: 'category_id',
+                model: CourseCategory
+            }
+        }])
+    }
+    else {
+         studentRating = await StudentRating.findByIdAndUpdate(req.params.id,{
+            isBadJudge: !req.body.isBadJudge,
+        })
+        .populate([{
+            path: 'id_teacher',
+            model: Teacher,
+            // select: "_id  ",
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+        }, {
+            path: 'id_student',
+            model: Student,
+            // select: "_id  ",
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+        }, {
+            path: 'id_course',
+            model: Course,
+            // select: "_id  ",
+            populate: {
+                path: 'category_id',
+                model: CourseCategory
+            }
+        }])
+        
+    }
+    if (!studentRating) res.status(404).send("The student rating doesn't exist")
+        else res.send(studentRating)
 }
 
 exports.deleteStudentRating = async (req, res, next) => {

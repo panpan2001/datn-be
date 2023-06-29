@@ -32,25 +32,30 @@ const checkAccessStatus = {
                 // neu ko thi count cu tiep tuc tăng ->  ko tu dong khoa nua vi is deleted 
                 // da de la false khi het han roi
                 // co nen khi check het bi block thi clear danh gia luon ko 
-                const student = await Student.findOne({ account_id: account._id })
-                const studentRating = await StudentRating.updateMany(
-                    {
-                        id_student: student._id,
-                        isBadJudge: true,
-                        countBadJudge: 2
-                    },
-                    {
-                        // $set: {
-                        //     isBadJudge: false,
-                            
-                        // },
-                        $inc: { countBadJudge: -1 },
-    
-                    }
-                    ,{
-                        new: true
-                    }
-                    )
+                // --------
+                // const student = await Student.findOne({ account_id: account._id })
+                // const studentRating = await StudentRating.updateMany(
+                //     {
+                //         id_student: student._id,
+                //         isBadJudge: true,
+                //         // countBadJudge: 2
+                //     },
+                //     {
+                //         //isbadjudge false : badjudge dung de an cac binh luan sai trai 
+                //         $set: {
+                //             isBadJudge: false,
+
+                //         },
+                //         // co nen khi het block thi no giam di ko=> ko can => vi khi het blick thi isdeleted false, chi khi bi bao xau them thif count tang them >2 lan roi no ms khoa 
+                //         // $inc: { countBadJudge: -1 },
+
+                //     }
+                //     , {
+                //         new: true
+                //     }
+                // )
+                // co nen check tim kiem rating co count>2 va khoa tiep ko ? 
+                // -------------
                 next()
             }
             else {

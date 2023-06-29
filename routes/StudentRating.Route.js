@@ -17,7 +17,9 @@ router.put('/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.upda
 
 router.patch('/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.updateStudentRatingPatch)
 
-router.patch('/sendWarning/:id',StudentRating.updateQualityOfStudentRating)
+router.patch('/sendWarning/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.updateQualityOfStudentRating)
+
+router.patch('/changeAppearance/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.changeAppearanceStudentRating)
 
 router.delete('/:id',middlewareController.verifyUserAndAdminAuth,StudentRating.deleteStudentRating)    
 

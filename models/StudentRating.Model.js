@@ -73,7 +73,11 @@ const studentRatingSchema= mongoose.Schema({
     messageFromSystem:[{
         type:String,
         default:""
-    }]
+    }],
+    studentUpdatedAt:{
+        type:String,
+        default:""
+    }
 },{
     timestamps: true
 })
@@ -91,7 +95,8 @@ function validateStudentRating(studentRating){
         isDemo: Joi.boolean(),
         isBadJudge: Joi.boolean(),
         countBadJudge: Joi.number(),
-        messageFromSystem: Joi.array().items(Joi.string())
+        messageFromSystem: Joi.array().items(Joi.string()),
+        studentUpdatedAt: Joi.string()
     })
     return schema.validate(studentRating)
 }
