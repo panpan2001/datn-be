@@ -9,7 +9,10 @@ exports.createDemoCourseStudent = async (req, res, next) => {
     const demoCourseStudent = new DemoCourseStudent({
         id_student: req.body.id_student,
         id_demo_course: req.body.id_demo_course,
-        isJudged: req.body.isJudged
+        isJudged: req.body.isJudged,
+        isReported: req.body.isReported,
+        reportedMessage: req.body.reportedMessage,
+        reportedDateTime: req.body.reportedDateTime
     })
     await demoCourseStudent.save()
     res.send(demoCourseStudent)
@@ -113,11 +116,71 @@ exports.updateDemoCourseStudent = async (req, res, next) => {
     const demoCourseStudent = await DemoCourseStudent.findByIdAndUpdate(req.params.id, {
         id_student: req.body.id_student,
         id_demo_course: req.body.id_demo_course,
-        isJudged: req.body.isJudged
+        isJudged: req.body.isJudged,
+        isReported: req.body.isReported,
+        reportedMessage: req.body.reportedMessage,
+        reportedDateTime: req.body.reportedDateTime
+
+    })
+    .populate('id_student', {
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+    })
+    .populate('id_demo_course', {
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
     })
     if (!demoCourseStudent) res.status(404).send("The course student doesn't exist")
     else res.send(demoCourseStudent)
 }
+
+exports.reportDemoCourseStudent = async (req, res, next) => {
+    console.log("reportDemoCourseStudent",req.body)
+    const oldDemoCourseStudent = await DemoCourseStudent.findByIdAndUpdate(req.params.id,{
+        $set: {
+            reportedMessage:[]
+        }
+    })
+    const demoCourseStudent = await DemoCourseStudent.findByIdAndUpdate(req.params.id, 
+        {
+            $set: {
+                isReported: req.body.isReported,
+                reportedDateTime: req.body.reportedDateTime,
+                
+            },
+            $addToSet:
+            {
+                "reportedMessage":
+                {
+                    $each: req.body.reportedMessage
+                }
+            },
+            $inc:{
+                countReported:1
+            }
+       
+        
+    },{
+        new: true
+    })
+    .populate('id_student', {
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+    })
+    .populate('id_demo_course', {
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0
+    })
+    if (!demoCourseStudent) res.status(404).send("The course student doesn't exist")
+    else {
+        console.log("reportDemoCourseStudent",demoCourseStudent)
+        res.send(demoCourseStudent)
+}}
+
 
 exports.updateDemoCourseJudge = async (req, res, next) => {
     const demoCourseStudent = await DemoCourseStudent.findByIdAndUpdate(req.params.id, {

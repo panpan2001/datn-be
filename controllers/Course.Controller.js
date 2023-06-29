@@ -29,7 +29,8 @@ exports.createCourse = async (req, res, next) => {
         cost: req.body.cost,
         image: req.body.image,
         link_video: req.body.link_video,
-        link_meeeting: req.body.link_meeeting
+        link_meeeting: req.body.link_meeeting,
+        isHidden: req.body.isHidden
     });
     await course.save();
     res.send(course);
@@ -107,7 +108,8 @@ exports.updateCourse = async (req, res, next) => {
         cost: req.body.cost,
         image: req.body.image,
         link_video: req.body.link_video,
-        link_meeeting: req.body.link_meeeting
+        link_meeeting: req.body.link_meeeting,
+        isHidden: req.body.isHidden
     },
         { new: true });
     if (!course) res.status(404).send("The course doesn't exist")

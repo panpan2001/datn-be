@@ -73,7 +73,11 @@ const courseSchema= mongoose.Schema({
     link_meeeting:[{
         type:String,
         default:""
-    }]
+    }],
+    isHidden:{
+        type:Boolean,
+        default:false
+    }
    
 },{
     timestamps: true
@@ -95,6 +99,7 @@ function validateCourse(course){
         image: Joi.string(),
         link_video: Joi.array().items(Joi.string().required()),
         link_meeeting: Joi.array().items(Joi.string().required()),
+        isHidden: Joi.boolean()
     })
     return schema.validate(course)
 }

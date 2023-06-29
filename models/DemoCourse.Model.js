@@ -40,7 +40,11 @@ const demoCourseSchema= mongoose.Schema({
     link_meeting:[{
         type: String,
         default:""
-    }]
+    }],
+    isHidden:{
+        type: Boolean,
+        default: false
+    }
 })
 
 function validateDemoCourse(demoCourse){
@@ -52,7 +56,8 @@ function validateDemoCourse(demoCourse){
         schedule: Joi.string().required(),
         learning_period: Joi.number().min(1).max(5).required(),
         link_video: Joi.array().items(Joi.string()).required(),
-        link_meeting: Joi.array().items(Joi.string()).required()
+        link_meeting: Joi.array().items(Joi.string()).required(),
+        isHidden: Joi.boolean()
     })
     return schema.validate(demoCourse)
 }

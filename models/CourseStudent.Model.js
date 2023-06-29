@@ -16,6 +16,22 @@ const courseStudentSchema= mongoose.Schema({
     isJudged:{
         type: Boolean,
         default: false
+    },
+    isReported:{
+        type: Boolean,
+        default: false
+    },
+    reportedMessage:[{
+        type: String,
+        default: ''
+    }],
+    reportedDateTime:{
+        type:String,
+        default: ''
+    },
+    countReported:{
+        type: Number,
+        default: 0
     }
     
 },{
@@ -26,6 +42,11 @@ function validateCourseStudent(courseStudent){
     const schema= Joi.object({
         id_student: Joi.objectId().required(),
         id_course: Joi.objectId().required(),
+        isJudged: Joi.boolean(),
+        isReported: Joi.boolean(),
+        reportedMessage: Joi.array().items(Joi.string()),
+        reportedDateTime: Joi.string(),
+        countReported: Joi.number()
     })
     return schema.validate(courseStudent)
 }
