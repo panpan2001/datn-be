@@ -485,8 +485,20 @@ exports.changeAppearanceStudentRating = async (req, res, next) => {
 exports.deleteStudentRating = async (req, res, next) => {
 
     const studentRating = await StudentRating.findByIdAndDelete(req.params.id)
+    
     if (!studentRating) res.status(404).send("The student rating doesn't exist")
     else {
+        if(studentRating.isDemo==true){
+            await DemoCourseStudent.findByIdAndUpdate(studentRating.id_course, {
+                isJudged: false
+            }
+            )
+        }
+        else {
+            await CourseStudent.findByIdAndUpdate(studentRating.id_course, {
+                isJudged: false
+            })
+        }
         const newStudentRating = await StudentRating.find()
         .populate([{
             path: 'id_teacher',

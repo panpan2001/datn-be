@@ -182,15 +182,27 @@ exports.updateCourseStudent = async (req, res, next) => {
 }
 
 exports.reportCourseStudent = async (req, res, next) => {
-    
-    const {error}= validateCourseStudent(req.body)
-    if(error) return res.status(400).send(error.details[0].message)
-    const courseStudent = await CourseStudent.findByIdAndUpdate(req.params.id, {
-   
-        isReported: req.body.isReported,
-        reportedMessage: req.body.reportedMessage,
-        reportedDateTime: req.body.reportedDateTime
-        
+    const oldCourseStudent = await CourseStudent.findByIdAndUpdate(req.params.id,{
+        $set: {
+            reportedMessage:[]
+        }
+    })
+    const courseStudent = await CourseStudent.findByIdAndUpdate(req.params.id, 
+        { 
+        $set: {
+            isReported: req.body.isReported,
+            reportedDateTime: req.body.reportedDateTime,
+        },
+        $addToSet:
+        {
+            "reportedMessage":
+            {
+                $each: req.body.reportedMessage
+            }
+        },
+        $inc:{
+            countReported:1
+        }  
     },
      { new: true })
      .populate('id_student',{
@@ -221,7 +233,39 @@ exports.reportCourseStudent = async (req, res, next) => {
         ]
     }])
     if(!courseStudent) res.status(404).send("The course student doesn't exist")
-    else res.send(courseStudent)
+    else {
+        console.log({courseStudent})
+        const newCourseStudent= await CourseStudent
+        .find({id_student:courseStudent.id_student})
+        .populate('id_student',{
+            createdAt: 0,
+            updatedAt: 0,
+            __v: 0
+    
+        })
+        .populate([{
+            path: 'id_course',
+            model: Course,
+            // select: "id_course name category_id id_teacher ",
+            populate:  [
+                {
+                    path: 'category_id',
+                    model: CourseCategory,
+                    select: "_id category_name type level "
+                },
+                {
+                    path: 'id_teacher',
+                    model: Teacher,
+                    select: "_id  ",
+                    populate: {
+                        path: 'account_id',
+                        model: Account,
+                    }
+                }
+            ]
+        }])
+        res.send(newCourseStudent)
+    }
 }
 exports.updateCourseStudentJudged = async (req, res, next) => {
     const courseStudent = await CourseStudent.findByIdAndUpdate(req.params.id, {
@@ -263,7 +307,8 @@ exports.deleteCourseStudent = async (req, res, next) => {
     const courseStudent = await CourseStudent.findByIdAndDelete(req.params.id)
     if(!courseStudent) res.status(404).send("The course student doesn't exist")
     else {
-        const coursesStudent = await CourseStudent.find({id_student: courseStudent.id_student})
+        const coursesStudent = await CourseStudent
+        .find({id_student: courseStudent.id_student})
         .populate('id_student',{
             createdAt: 0,
             updatedAt: 0,

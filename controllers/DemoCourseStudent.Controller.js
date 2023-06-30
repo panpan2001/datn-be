@@ -25,11 +25,35 @@ exports.getAllDemoCourseStudents = async (req, res, next) => {
             updatedAt: 0,
             __v: 0
         })
-        .populate('id_demo_course', {
-            createdAt: 0,
-            updatedAt: 0,
-            __v: 0
-        })
+        .populate(
+            [
+                {
+            path: 'id_demo_course',
+            populate: {
+                path: 'id_course',
+                model: Course,
+                select: "id_course name  ",
+                populate: 
+                [
+                    {
+                    path: 'category_id',
+                    model: CourseCategory,
+                    select: "_id category_name type level "
+                },
+                 {
+                    path: 'id_teacher',
+                    model: Teacher,
+                    // select: "id_teacher  ",
+                    populate: {
+                        path: 'account_id',
+                        model: Account,
+                    }
+                }]
+            }
+        }
+    ]
+    )
+
 
     if (!demoCourseStudents) res.status(404).send("The course student doesn't exist")
     else res.send(demoCourseStudents)
@@ -43,11 +67,35 @@ exports.getDemoCourseStudentById = async (req, res, next) => {
             updatedAt: 0,
             __v: 0
         })
-        .populate('id_demo_course', {
-            createdAt: 0,
-            updatedAt: 0,
-            __v: 0
-        })
+        .populate(
+            [
+                {
+            path: 'id_demo_course',
+            populate: {
+                path: 'id_course',
+                model: Course,
+                select: "id_course name  ",
+                populate: 
+                [
+                    {
+                    path: 'category_id',
+                    model: CourseCategory,
+                    select: "_id category_name type level "
+                },
+                 {
+                    path: 'id_teacher',
+                    model: Teacher,
+                    // select: "id_teacher  ",
+                    populate: {
+                        path: 'account_id',
+                        model: Account,
+                    }
+                }]
+            }
+        }
+    ]
+    )
+
 
     if (!demoCourseStudent) res.status(404).send("The demo course student doesn't exist")
     else res.send(demoCourseStudent)
@@ -100,11 +148,34 @@ exports.getDemoCourseStudentByDemoCourseId = async (req, res, next) => {
             updatedAt: 0,
             __v: 0
         })
-        .populate('id_demo_course', {
-            createdAt: 0,
-            updatedAt: 0,
-            __v: 0
-        })
+        .populate(
+            [
+                {
+            path: 'id_demo_course',
+            populate: {
+                path: 'id_course',
+                model: Course,
+                select: "id_course name  ",
+                populate: 
+                [
+                    {
+                    path: 'category_id',
+                    model: CourseCategory,
+                    select: "_id category_name type level "
+                },
+                 {
+                    path: 'id_teacher',
+                    model: Teacher,
+                    // select: "id_teacher  ",
+                    populate: {
+                        path: 'account_id',
+                        model: Account,
+                    }
+                }]
+            }
+        }
+    ]
+    )
 
     if (!demoCourseStudent) res.status(404).send("The demo  course student student doesn't exist")
     else res.send(demoCourseStudent)
@@ -127,11 +198,35 @@ exports.updateDemoCourseStudent = async (req, res, next) => {
         updatedAt: 0,
         __v: 0
     })
-    .populate('id_demo_course', {
-        createdAt: 0,
-        updatedAt: 0,
-        __v: 0
-    })
+    .populate(
+        [
+            {
+        path: 'id_demo_course',
+        populate: {
+            path: 'id_course',
+            model: Course,
+            select: "id_course name  ",
+            populate: 
+            [
+                {
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+             {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "id_teacher  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account,
+                }
+            }]
+        }
+    }
+]
+)
+
     if (!demoCourseStudent) res.status(404).send("The course student doesn't exist")
     else res.send(demoCourseStudent)
 }
@@ -170,15 +265,70 @@ exports.reportDemoCourseStudent = async (req, res, next) => {
         updatedAt: 0,
         __v: 0
     })
-    .populate('id_demo_course', {
-        createdAt: 0,
-        updatedAt: 0,
-        __v: 0
-    })
+    .populate(
+        [
+            {
+        path: 'id_demo_course',
+        populate: {
+            path: 'id_course',
+            model: Course,
+            select: "id_course name  ",
+            populate: 
+            [
+                {
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+             {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "id_teacher  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account,
+                }
+            }]
+        }
+    }
+]
+)
+
     if (!demoCourseStudent) res.status(404).send("The course student doesn't exist")
     else {
         console.log("reportDemoCourseStudent",demoCourseStudent)
-        res.send(demoCourseStudent)
+        const newDemoCourseStudent= await DemoCourseStudent
+        .find({ id_student: demoCourseStudent.id_student })
+        .populate(
+            [
+                {
+            path: 'id_demo_course',
+            populate: {
+                path: 'id_course',
+                model: Course,
+                select: "id_course name  ",
+                populate: 
+                [
+                    {
+                    path: 'category_id',
+                    model: CourseCategory,
+                    select: "_id category_name type level "
+                },
+                 {
+                    path: 'id_teacher',
+                    model: Teacher,
+                    // select: "id_teacher  ",
+                    populate: {
+                        path: 'account_id',
+                        model: Account,
+                    }
+                }]
+            }
+        }
+    ]
+    )
+
+        res.send(newDemoCourseStudent)
 }}
 
 
@@ -193,7 +343,37 @@ exports.deleteDemoCourseStudent = async (req, res, next) => {
     const demoCourseStudent = await DemoCourseStudent.findByIdAndDelete(req.params.id)
     if (!demoCourseStudent) res.status(404).send("The course student doesn't exist")
     else {
-        const newDemoCourseStudent = await DemoCourseStudent.find({ id_student: demoCourseStudent.id_student })
+        const newDemoCourseStudent = await DemoCourseStudent.
+        find({ id_student: demoCourseStudent.id_student })
+        .populate(
+            [
+                {
+            path: 'id_demo_course',
+            populate: {
+                path: 'id_course',
+                model: Course,
+                select: "id_course name  ",
+                populate: 
+                [
+                    {
+                    path: 'category_id',
+                    model: CourseCategory,
+                    select: "_id category_name type level "
+                },
+                 {
+                    path: 'id_teacher',
+                    model: Teacher,
+                    // select: "id_teacher  ",
+                    populate: {
+                        path: 'account_id',
+                        model: Account,
+                    }
+                }]
+            }
+        }
+    ]
+    )
+
         res.send(newDemoCourseStudent)
 
     }

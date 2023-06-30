@@ -15,6 +15,8 @@ router.put('/:id',middlewareController.verifyUserAndAdminAuth,CourseController.u
 
 router.patch('/linkVideo/:id',middlewareController.verifyUserAndAdminAuth,CourseController.addLinkVideo)
 
+router.patch('/changeAppearance/:id',middlewareController.verifyUserAndAdminAuth,CourseController.changeAppearanceCourse)
+
 router.delete('/:id',middlewareController.verifyUserAndAdminAuth,CourseController.deleteCourse)
 
 router.delete('/admin/:id',middlewareController.verifyUserAndAdminAuth,CourseController.adminDeleteCourse)

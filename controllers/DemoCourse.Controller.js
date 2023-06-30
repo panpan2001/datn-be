@@ -174,7 +174,7 @@ exports.updateDemoCourse = async (req, res, next) => {
 }
 
 exports.changeAppearanceDemoCourse = async (req, res, next) => {
-
+console.log("req.body",req.body)
     const course = await DemoCourse
     .findByIdAndUpdate(req.params.id, {
         isHidden: !req.body.isHidden
@@ -200,8 +200,29 @@ exports.changeAppearanceDemoCourse = async (req, res, next) => {
     }])
     if (!course) res.status(404).send("The course doesn't exist")
     else {
+        console.log({course})
         const newcourse = await DemoCourse.find()
-        res.send(newcourse)}
+        .populate([{
+            path: 'id_course',
+            // select: "id_course name category_id id_teacher ",
+            populate: [{
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
+            }
+            ]
+        }])
+        res.send(newcourse)
+    }
 }
 
 
@@ -304,14 +325,25 @@ exports.deleteDemoCourse = async (req, res, next) => {
     if (!demoCourse) res.status(404).send("The course doesn't exist")
     else {
         const newDemoCourse = await DemoCourse.find({ id_course: demoCourse.id_course })
-            .populate('id_course', {
-                start_date: 0,
-                end_date: 0,
-                cost: 0,
-                learning_period: 0,
-                link_video: 0,
-                link_meeting: 0
-            })
+        .populate([{
+            path: 'id_course',
+            // select: "id_course name category_id id_teacher ",
+            populate: [{
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
+            }
+            ]
+        }])
         res.status(200).send(newDemoCourse)
         console.log({ newDemoCourse })
     }
@@ -333,14 +365,25 @@ exports.adminDeleteDemoCourse = async (req, res, next) => {
     if (!demoCourse) res.status(404).send("The course doesn't exist")
     else {
         const newDemoCourse = await DemoCourse.find()
-            .populate('id_course', {
-                start_date: 0,
-                end_date: 0,
-                cost: 0,
-                learning_period: 0,
-                link_video: 0,
-                link_meeting: 0
-            })
+        .populate([{
+            path: 'id_course',
+            // select: "id_course name category_id id_teacher ",
+            populate: [{
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
+            }
+            ]
+        }])
         res.status(200).send(newDemoCourse)
         console.log("newDemoCourse.length:", newDemoCourse.length)
     }

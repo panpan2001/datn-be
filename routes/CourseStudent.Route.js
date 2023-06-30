@@ -20,6 +20,7 @@ router.put('/:id',middlewareController.verifyUserAndAdminAuth,CourseStudent.upda
 
 router.patch('/:id',CourseStudent.updateCourseStudentJudged)
 
+router.patch('/report/:id',middlewareController.verifyUserAndAdminAuth,CourseStudent.reportCourseStudent)
 
 router.delete('/:id',middlewareController.verifyUserAndAdminAuth,CourseStudent.deleteCourseStudent)
 

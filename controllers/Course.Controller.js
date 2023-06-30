@@ -111,7 +111,16 @@ exports.updateCourse = async (req, res, next) => {
         link_meeeting: req.body.link_meeeting,
         isHidden: req.body.isHidden
     },
-        { new: true });
+        { new: true })
+        .populate('category_id')
+        .populate([{
+            path: 'id_teacher',
+            model: Teacher,
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+        }]);;
     if (!course) res.status(404).send("The course doesn't exist")
     else res.send(course);
 }
@@ -120,64 +129,64 @@ exports.updateCourse = async (req, res, next) => {
 exports.addLinkVideo = async (req, res, next) => {
     // console.log(req.body)
     // if (req.body.del_link_video.length > 0) {
-        if(req.body.type=='Video'){
-            const course = await Course.findOneAndUpdate({ _id: req.params.id },
-                {
-                    $pullAll: {
-                        link_video: req.body.del_link_video
-        
-                    }
+    if (req.body.type == 'Video') {
+        const course = await Course.findOneAndUpdate({ _id: req.params.id },
+            {
+                $pullAll: {
+                    link_video: req.body.del_link_video
+
                 }
-        
-            );
-        
-            const newcourse = await Course.findByIdAndUpdate(req.params.id,
-                {
-                    $addToSet:
-                    {
-                        link_video:
-                        {
-                            $each: req.body.link_video,
-                            // $slice: 0, 
-                        }
-                    }
-                })
-            if (!newcourse) res.status(404).send("The course doesn't exist")
-            else {
-                res.send(newcourse).status(200);
-                // console.log("course link video ", newcourse.link_video)
             }
-                }
-                else{
-                    console.log(req.body)
-                    const course = await Course.findOneAndUpdate({ _id: req.params.id },
-                        {
-                            $pullAll: {
-                                link_meeeting: req.body.del_link_video
-                
-                            }
-                        }
-                
-                    );
-                
-                    const newcourse = await Course.findByIdAndUpdate(req.params.id,
-                        {
-                            $addToSet:
-                            {
-                                link_meeeting:
-                                {
-                                    $each: req.body.link_video,
-                                    // $slice: 0, 
-                                }
-                            }
-                        })
-                    if (!newcourse) res.status(404).send("The course doesn't exist")
-                    else {
-                        res.send(newcourse).status(200);
-                        console.log("course link meeting ", newcourse.link_meeeting)
+
+        );
+
+        const newcourse = await Course.findByIdAndUpdate(req.params.id,
+            {
+                $addToSet:
+                {
+                    link_video:
+                    {
+                        $each: req.body.link_video,
+                        // $slice: 0, 
                     }
                 }
-  
+            })
+        if (!newcourse) res.status(404).send("The course doesn't exist")
+        else {
+            res.send(newcourse).status(200);
+            // console.log("course link video ", newcourse.link_video)
+        }
+    }
+    else {
+        console.log(req.body)
+        const course = await Course.findOneAndUpdate({ _id: req.params.id },
+            {
+                $pullAll: {
+                    link_meeeting: req.body.del_link_video
+
+                }
+            }
+
+        );
+
+        const newcourse = await Course.findByIdAndUpdate(req.params.id,
+            {
+                $addToSet:
+                {
+                    link_meeeting:
+                    {
+                        $each: req.body.link_video,
+                        // $slice: 0, 
+                    }
+                }
+            })
+        if (!newcourse) res.status(404).send("The course doesn't exist")
+        else {
+            res.send(newcourse).status(200);
+            console.log("course link meeting ", newcourse.link_meeeting)
+        }
+    }
+
 }
 // else {
 //     const newcourse = await Course.findByIdAndUpdate(req.params.id,
@@ -201,6 +210,39 @@ exports.addLinkVideo = async (req, res, next) => {
 
 // }
 
+
+exports.changeAppearanceCourse = async (req, res, next) => {
+    const course = await Course.findByIdAndUpdate(req.params.id, {
+        isHidden: !req.body.isHidden
+    }, {
+        new: true
+    }
+    )
+        .populate('category_id')
+        .populate([{
+            path: 'id_teacher',
+            model: Teacher,
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+        }]);
+    if (!course) res.status(404).send("The course doesn't exist")
+    else {
+        const newcourses = await Course
+            .find()
+            .populate('category_id')
+            .populate([{
+                path: 'id_teacher',
+                model: Teacher,
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
+            }]);
+        res.send(newcourses).status(200);
+    }
+}
 exports.deleteCourse = async (req, res, next) => {
     const course = await Course.findByIdAndDelete(req.params.id);
     // const courseStudent= await CourseStudent.findOne({ id_course: req.params.id })
@@ -219,7 +261,14 @@ exports.deleteCourse = async (req, res, next) => {
         //
         const newcourses = await Course.find({ id_teacher: course.id_teacher })
             .populate('category_id')
-            .populate('id_teacher');
+            .populate([{
+                path: 'id_teacher',
+                model: Teacher,
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
+            }]);
         res.send(newcourses)
 
     };
@@ -245,17 +294,35 @@ exports.adminDeleteCourse = async (req, res, next) => {
     else {
         //
         const newcourses = await Course.find()
-            .populate('category_id')
-            .populate('id_teacher');
+        .populate('category_id')
+        .populate([{
+            path: 'id_teacher',
+            model: Teacher,
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+        }]);;
         const newDemoCourses = await DemoCourse.find()
-            .populate('id_course', {
-                start_date: 0,
-                end_date: 0,
-                cost: 0,
-                learning_period: 0,
-                link_video: 0,
-                link_meeting: 0
-            })
+        .populate([{
+            path: 'id_course',
+            // select: "id_course name category_id id_teacher ",
+            populate: [{
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
+            }
+            ]
+        }])
         res.send({ newcourses, newDemoCourses })
 
     };
