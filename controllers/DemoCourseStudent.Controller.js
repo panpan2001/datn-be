@@ -143,11 +143,15 @@ exports.getDemoCourseStudentByStudentId = async (req, res, next) => {
 exports.getDemoCourseStudentByDemoCourseId = async (req, res, next) => {
     // const demoCourseStudent = await Course.find({id_course:req.params.id})
     const demoCourseStudent = await DemoCourseStudent.find({ id_demo_course: req.params.id })
-        .populate('id_student', {
-            createdAt: 0,
-            updatedAt: 0,
-            __v: 0
-        })
+        .populate([
+            {
+            path: 'id_student',
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+            }
+        ])
         .populate(
             [
                 {
@@ -178,7 +182,10 @@ exports.getDemoCourseStudentByDemoCourseId = async (req, res, next) => {
     )
 
     if (!demoCourseStudent) res.status(404).send("The demo  course student student doesn't exist")
-    else res.send(demoCourseStudent)
+   
+    else {
+        console.log("len: ",demoCourseStudent.length)
+        res.send(demoCourseStudent)}
 }
 
 exports.updateDemoCourseStudent = async (req, res, next) => {
@@ -339,6 +346,10 @@ exports.updateDemoCourseJudge = async (req, res, next) => {
     if (!demoCourseStudent) res.status(404).send("The course student doesn't exist")
     else res.send(demoCourseStudent)
 }
+
+
+
+
 exports.deleteDemoCourseStudent = async (req, res, next) => {
     const demoCourseStudent = await DemoCourseStudent.findByIdAndDelete(req.params.id)
     if (!demoCourseStudent) res.status(404).send("The course student doesn't exist")

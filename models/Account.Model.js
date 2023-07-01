@@ -52,6 +52,10 @@ const accountSchema= mongoose.Schema({
     messageFromSystem:[{
         type: String,
         default:""
+    }],
+    seenMessage:[{
+        type: String,
+        default:""
     }]
 },{
     timestamps: true
@@ -69,7 +73,8 @@ function validateAccount(account){
         password: Joi.string().min(6).required(),
         is_deleted:Joi.boolean(),
         avatar:Joi.string(),
-        messageFromSystem:Joi.array(Joi.string())
+        messageFromSystem:Joi.array().items(Joi.string()),
+        seenMessage:Joi.array().items(Joi.string())
     })
     return schema.validate(account)
 }
