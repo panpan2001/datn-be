@@ -10,6 +10,8 @@ router.get('/:id',CourseStudent.getCourseStudentById)
 
 router.get('/student/:id',CourseStudent.getCourseStudentByStudentId)
 
+router.get('/course/:id',CourseStudent.getCourseStudentByCourseId)
+
 router.post('/',
 middlewareController.verifyUserAndAdminAuth,
 checkCourseStudent.checkDuplicateCourse,
@@ -18,7 +20,7 @@ CourseStudent.createCourseStudent)
 
 router.put('/:id',middlewareController.verifyUserAndAdminAuth,CourseStudent.updateCourseStudent)
 
-router.patch('/:id',CourseStudent.updateCourseStudentJudged)
+router.patch('/:id',middlewareController.verifyUserAndAdminAuth,CourseStudent.updateCourseStudentJudged)
 
 router.patch('/report/:id',middlewareController.verifyUserAndAdminAuth,CourseStudent.reportCourseStudent)
 

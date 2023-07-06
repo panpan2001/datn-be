@@ -310,6 +310,11 @@ exports.addLinkVideo = async (req, res, next) => {
 
 
 exports.sendReportDemoCourseMessage = async (req, res, next) => {
+    const resetMessage= await DemoCourse.findByIdAndUpdate(req.params.id,{
+        $set:{
+            reportedMessage:[]
+        }
+    });
     const adminReportMessage = await DemoCourse.findByIdAndUpdate(req.params.id, {
         $set: {
             reportedDateTime: req.body.reportedDateTime,
@@ -380,8 +385,28 @@ exports.sendReportDemoCourseMessage = async (req, res, next) => {
 }
 
 exports.deleteDemoCourse = async (req, res, next) => {
+    // teacher delete demo course 
     // console.log("id  democourse delete", req.params.id)
     const demoCourse = await DemoCourse.findByIdAndDelete(req.params.id)
+    .populate([{
+        path: 'id_course',
+        // select: "id_course name category_id id_teacher ",
+        populate: [{
+            path: 'category_id',
+            model: CourseCategory,
+            select: "_id category_name type level "
+        },
+        {
+            path: 'id_teacher',
+            model: Teacher,
+            // select: "_id  ",
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+        }
+        ]
+    }])
     // console.log({ demoCourse })
     // const demoCourseStudent = await DemoCourseStudent.findOne({ id_demo_course: req.params.id })
     // if (demoCourseStudent) {
@@ -389,7 +414,13 @@ exports.deleteDemoCourse = async (req, res, next) => {
     // }
     if (!demoCourse) res.status(404).send("The course doesn't exist")
     else {
-        const newDemoCourse = await DemoCourse.find({ id_course: demoCourse.id_course })
+        // const newDemoCourse = await DemoCourse.find({ id_course: demoCourse.id_course })
+        const teacher = await Teacher.findOne({account_id: req.headers.account_id})
+        console.log("teacher?", teacher? teacher:false )
+        let course = await Course.find({ id_teacher: teacher._id })
+          course = course.map(item => item._id) 
+          console.log("couurse:",{course})
+        const newDemoCourse = await DemoCourse.find({ id_course: { $in: course } })
             .populate([{
                 path: 'id_course',
                 // select: "id_course name category_id id_teacher ",
@@ -410,7 +441,7 @@ exports.deleteDemoCourse = async (req, res, next) => {
                 ]
             }])
         res.status(200).send(newDemoCourse)
-        console.log({ newDemoCourse })
+        console.log("teacher delete demo course (deleteDemoCourse) : ", newDemoCourse.length)
     }
 }
 exports.adminDeleteDemoCourse = async (req, res, next) => {

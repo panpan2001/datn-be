@@ -30,7 +30,10 @@ exports.createCourse = async (req, res, next) => {
         image: req.body.image,
         link_video: req.body.link_video,
         link_meeeting: req.body.link_meeeting,
-        isHidden: req.body.isHidden
+        isHidden: req.body.isHidden,
+        countReportedTime: req.body.countReportedTime,
+        reportedMessage: req.body.reportedMessage,
+        reportedDateTime: req.body.reportedDateTime
     });
     await course.save();
     res.send(course);
@@ -109,7 +112,10 @@ exports.updateCourse = async (req, res, next) => {
         image: req.body.image,
         link_video: req.body.link_video,
         link_meeeting: req.body.link_meeeting,
-        isHidden: req.body.isHidden
+        isHidden: req.body.isHidden,
+        countReportedTime: req.body.countReportedTime,
+        reportedMessage: req.body.reportedMessage,
+        reportedDateTime: req.body.reportedDateTime
     },
         { new: true })
         .populate('category_id')
@@ -243,6 +249,69 @@ exports.changeAppearanceCourse = async (req, res, next) => {
         res.send(newcourses).status(200);
     }
 }
+
+exports.reportCourse = async (req, res, next) => {
+    const resetMessage= await Course.findByIdAndUpdate(req.params.id, {
+        $set:{
+            reportedMessage:[]
+        }
+    })
+    const adminReportMessage= await Course.findByIdAndUpdate(req.params.id, {
+        $set: {
+            reportedDateTime: req.body.reportedDateTime,
+
+        },
+        $inc: {
+            countReportedTime: 1
+        },
+        $addToSet: {
+            reportedMessage: {
+                $each: req.body.reportedMessage
+            }
+        }
+    })
+    .populate('category_id')
+    .populate([{
+        path: 'id_teacher',
+        model: Teacher,
+        populate: {
+            path: 'account_id',
+            model: Account
+        }
+    }]);
+    if (!adminReportMessage) res.status(404).send("The course doesn't exist")
+    else {
+        const student_report = await CourseStudent.find(
+            {
+                id_course: adminReportMessage._id,
+                isReported: true
+            }
+        )
+        const number_of_report = student_report.length
+        const number_student_of_course = adminReportMessage.number_of_student
+        if ((number_of_report / number_student_of_course) >= 0.5) {
+            await Course.findByIdAndUpdate(req.params.id, {
+                isHidden: true
+            })
+            res.send(adminReportMessage)
+        }
+        else {
+            if (adminReportMessage.countReportedTime >= 2) {
+                console.log("reported >= 2")
+                await Course.findByIdAndUpdate(req.params.id, {
+                    isHidden: true
+                })
+                console.log("sendReportDemoCourseMessage", adminReportMessage)
+                res.send(adminReportMessage)
+            }
+            else {
+                console.log("reported < 2")
+                console.log("sendReportDemoCourseMessage", adminReportMessage)
+                res.send(adminReportMessage)
+            }
+        }
+    }
+}
 exports.deleteCourse = async (req, res, next) => {
     const course = await Course.findByIdAndDelete(req.params.id);
     // const courseStudent= await CourseStudent.findOne({ id_course: req.params.id })
@@ -302,7 +371,7 @@ exports.adminDeleteCourse = async (req, res, next) => {
                 path: 'account_id',
                 model: Account
             }
-        }]);;
+        }]);
         const newDemoCourses = await DemoCourse.find()
         .populate([{
             path: 'id_course',

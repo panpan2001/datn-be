@@ -77,6 +77,20 @@ const courseSchema= mongoose.Schema({
     isHidden:{
         type:Boolean,
         default:false
+    },
+    countReportedTime:{
+        type:Number,
+        default:0
+    },
+    reportedMessage:[
+        {
+            type: String,
+            default:""
+        }
+    ],
+    reportedDateTime:{
+        type: String,
+        default: ""
     }
    
 },{
@@ -99,7 +113,10 @@ function validateCourse(course){
         image: Joi.string(),
         link_video: Joi.array().items(Joi.string().required()),
         link_meeeting: Joi.array().items(Joi.string().required()),
-        isHidden: Joi.boolean()
+        isHidden: Joi.boolean(),
+        countReportedTime: Joi.number(),
+        reportedMessage: Joi.array().items(Joi.string()),
+        reportedDateTime: Joi.string()
     })
     return schema.validate(course)
 }
