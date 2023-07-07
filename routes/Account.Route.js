@@ -7,7 +7,7 @@ router.get('/',AccountController.getAllAccounts)
 
 router.get('/:id',AccountController.getAccountById)
 
-router.put('/:id',middlewareController.verifyTokenAndAdminAuth,AccountController.updateAccount)
+router.patch('/:id',middlewareController.verifyTokenAndAdminAuth,AccountController.updateAccount)
 
 router.patch('/changeStatus/:id',middlewareController.verifyUserAndAdminAuth,AccountController.updateAccountStatus)
 

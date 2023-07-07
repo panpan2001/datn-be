@@ -56,7 +56,9 @@ exports.updateStudent = async (req, res, next) => {
     },
         { new: true })
     if (!student) res.status(404).send("The student doesn't exist")
-    else res.send(student)
+    else {
+        const newStudent= await Student.find().populate('account_id')
+        res.send(newStudent)}
 
 }
 

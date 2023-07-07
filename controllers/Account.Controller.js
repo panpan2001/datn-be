@@ -30,10 +30,10 @@ exports.updateAccount = async (req, res, next) => {
         email: req.body.email,
         phone_number: req.body.phone_number,
         password: req.body.password,
-        is_deleted: req.body.is_deleted,
-        avatar: req.body.avatar,
-        messageFromSystem: req.body.messageFromSystem,
-        seenMessage: req.body.seenMessage
+        // is_deleted: req.body.is_deleted,
+        // avatar: req.body.avatar,
+        // messageFromSystem: req.body.messageFromSystem,
+        // seenMessage: req.body.seenMessage
     }, { new: true });
     if (!account) return res.status(404).send("Account not found")
     else res.json(account);
