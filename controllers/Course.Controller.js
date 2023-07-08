@@ -133,7 +133,7 @@ exports.updateCourse = async (req, res, next) => {
 
 
 exports.addLinkVideo = async (req, res, next) => {
-    // console.log(req.body)
+    console.log(req.body)
     // if (req.body.del_link_video.length > 0) {
     if (req.body.type == 'Video') {
         const course = await Course.findOneAndUpdate({ _id: req.params.id },
@@ -146,21 +146,22 @@ exports.addLinkVideo = async (req, res, next) => {
 
         );
 
-        const newcourse = await Course.findByIdAndUpdate(req.params.id,
+        const newcourse = await Course.findOneAndUpdate({ _id: req.params.id },
             {
                 $addToSet:
                 {
                     link_video:
                     {
                         $each: req.body.link_video,
-                        // $slice: 0, 
                     }
                 }
+                
             })
         if (!newcourse) res.status(404).send("The course doesn't exist")
         else {
+            // const newCourseAdded= await DemoCourse.find({id_course:req.params.id})
             res.send(newcourse).status(200);
-            // console.log("course link video ", newcourse.link_video)
+            console.log("course link video ", newcourse.link_video)
         }
     }
     else {

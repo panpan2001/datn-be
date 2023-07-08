@@ -222,6 +222,7 @@ exports.changeAppearanceDemoCourse = async (req, res, next) => {
 
 exports.addLinkVideo = async (req, res, next) => {
     // console.log("id  democourse add", req.params.id)
+    console.log("req.body", req.body)
     if (req.body.type === "Video") {
         const course = await DemoCourse.findByIdAndUpdate(req.params.id, {
             $pullAll: {
@@ -231,14 +232,14 @@ exports.addLinkVideo = async (req, res, next) => {
         })
 
         const newcourse = await DemoCourse.findByIdAndUpdate(req.params.id, {
-            $addToSet:
-            {
-                link_video:
+                $addToSet:
                 {
-                    $each: req.body.link_video,
+                    link_video:
+                    {
+                        $each: req.body.link_video,
+                    }
                 }
             }
-        }
         )
             .populate([{
                 path: 'id_course',
@@ -259,7 +260,7 @@ exports.addLinkVideo = async (req, res, next) => {
                 }
                 ]
             }])
-        console.log("course link video demo course ", newcourse.link_video)
+        // console.log("course link video demo course ", newcourse.link_video)
 
         if (!newcourse) res.status(404).send("The course doesn't exist")
         else res.send(newcourse)
@@ -268,7 +269,7 @@ exports.addLinkVideo = async (req, res, next) => {
     else {
         const course = await DemoCourse.findByIdAndUpdate(req.params.id, {
             $pullAll: {
-                link_meeting: req.body.del_link_meeting
+                link_meeting: req.body.del_link_video
             }
         })
         const newcourse = await DemoCourse.findByIdAndUpdate(req.params.id, {
@@ -300,11 +301,10 @@ exports.addLinkVideo = async (req, res, next) => {
                 }
                 ]
             }])
-        console.log("course link video demo course ", newcourse.link_meeting)
 
         if (!newcourse) res.status(404).send("The course doesn't exist")
         else res.send(newcourse)
-        console.log("course link video demo course ", newcourse.link_meeting)
+        console.log("course link meting demo course ", newcourse.link_meeting)
     }
 }
 
