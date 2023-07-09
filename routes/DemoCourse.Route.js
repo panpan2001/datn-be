@@ -22,6 +22,8 @@ router.patch('/changeAppearance/:id',middlewareController.verifyUserAndAdminAuth
 
 router.patch('/report/:id',middlewareController.verifyUserAndAdminAuth,DemoCourseController.sendReportDemoCourseMessage)
 
+router.patch('/deleteDemoCourseReport/:id',middlewareController.verifyUserAndAdminAuth,DemoCourseController.deleteDemoCourseReport)
+
 router.delete('/:id',middlewareController.verifyUserAndAdminAuth,DemoCourseController.deleteDemoCourse)
 
 router.delete('/admin/:id',DemoCourseController.adminDeleteDemoCourse)

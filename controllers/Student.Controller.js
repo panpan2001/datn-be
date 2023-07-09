@@ -94,7 +94,7 @@ exports.getStudentByAccountId = async (req, res, next) => {
         __v: 0
     })
    
-    console.log("student get by account id : ", student)
+    // console.log("student get by account id : ", student)
 
     if (!student) res.status(404).send("The student doesn't exist")
     else res.send(student)

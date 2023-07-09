@@ -3,8 +3,9 @@ const { Course } = require("../models/Course.Model")
 const { CourseCategory } = require("../models/CourseCategory.Model")
 const { DemoCourse, validateDemoCourse } = require("../models/DemoCourse.Model")
 const { DemoCourseStudent } = require("../models/DemoCourseStudent.Model")
+const { Student } = require("../models/Student.Model")
 const { Teacher } = require("../models/Teacher.Model")
-
+const moment = require('moment')
 
 exports.createDemoCourse = async (req, res, next) => {
     const { error } = validateDemoCourse(req.body)
@@ -232,14 +233,14 @@ exports.addLinkVideo = async (req, res, next) => {
         })
 
         const newcourse = await DemoCourse.findByIdAndUpdate(req.params.id, {
-                $addToSet:
+            $addToSet:
+            {
+                link_video:
                 {
-                    link_video:
-                    {
-                        $each: req.body.link_video,
-                    }
+                    $each: req.body.link_video,
                 }
             }
+        }
         )
             .populate([{
                 path: 'id_course',
@@ -263,8 +264,25 @@ exports.addLinkVideo = async (req, res, next) => {
         // console.log("course link video demo course ", newcourse.link_video)
 
         if (!newcourse) res.status(404).send("The course doesn't exist")
-        else res.send(newcourse)
-        console.log("course link video demo course ", newcourse.link_video)
+        else {
+            res.send(newcourse)
+            console.log("course link video demo course ", newcourse.link_video)
+            let demoCourseStudent = await DemoCourseStudent.find({ id_demo_course: req.params.id })
+            demoCourseStudent = demoCourseStudent.map(item => item.id_student)
+            console.log("demoCourseStudent id ", demoCourseStudent)
+            for (let i = 0; i < demoCourseStudent.length; i++) {
+                const student_id = await Student.findById(demoCourseStudent[i])
+                console.log("student_id", i, student_id)
+                const account = await Account.findByIdAndUpdate(student_id.account_id, {
+                    $addToSet:
+                    {
+                        messageFromSystem: [` ( ${moment(newcourse.updatedAt).format('DD/MM/YYYY HH:mm:ss')}) Khóa học thử ${newcourse.id_course.name}, bắt đầu ngày ${moment(newcourse.start_date).format('DD/MM/YYYY')} được cập nhật link video thành: ${req.body.link_video.map(i => `${i}, `)} `]
+                    }
+
+                })
+                console.log(account.messageFromSystem)
+            }
+        }
     }
     else {
         const course = await DemoCourse.findByIdAndUpdate(req.params.id, {
@@ -303,16 +321,33 @@ exports.addLinkVideo = async (req, res, next) => {
             }])
 
         if (!newcourse) res.status(404).send("The course doesn't exist")
-        else res.send(newcourse)
-        console.log("course link meting demo course ", newcourse.link_meeting)
+        else {
+            res.send(newcourse)
+        console.log("course link meeting demo course ", newcourse.link_meeting)
+        let demoCourseStudent = await DemoCourseStudent.find({ id_demo_course: req.params.id })
+            demoCourseStudent = demoCourseStudent.map(item => item.id_student)
+            console.log("demoCourseStudent id ", demoCourseStudent)
+            for (let i = 0; i < demoCourseStudent.length; i++) {
+                const student_id = await Student.findById(demoCourseStudent[i])
+                console.log("student_id", i, student_id)
+                const account = await Account.findByIdAndUpdate(student_id.account_id, {
+                    $addToSet:
+                    {
+                        messageFromSystem: [` ( ${moment(newcourse.updatedAt).format('DD/MM/YYYY HH:mm:ss')}) Khóa học thử ${newcourse.id_course.name}, bắt đầu ngày ${moment(newcourse.start_date).format('DD/MM/YYYY')} được cập nhật link meeting thành: ${req.body.link_video.map(i => `${i}, `)} `]
+                    }
+
+                })
+                console.log(account.messageFromSystem)
+            }
+    }
     }
 }
 
 
 exports.sendReportDemoCourseMessage = async (req, res, next) => {
-    const resetMessage= await DemoCourse.findByIdAndUpdate(req.params.id,{
-        $set:{
-            reportedMessage:[]
+    const resetMessage = await DemoCourse.findByIdAndUpdate(req.params.id, {
+        $set: {
+            reportedMessage: []
         }
     });
     const adminReportMessage = await DemoCourse.findByIdAndUpdate(req.params.id, {
@@ -380,7 +415,7 @@ exports.sendReportDemoCourseMessage = async (req, res, next) => {
                 res.send(adminReportMessage)
             }
         }
-        
+
     }
 }
 
@@ -388,25 +423,25 @@ exports.deleteDemoCourse = async (req, res, next) => {
     // teacher delete demo course 
     // console.log("id  democourse delete", req.params.id)
     const demoCourse = await DemoCourse.findByIdAndDelete(req.params.id)
-    .populate([{
-        path: 'id_course',
-        // select: "id_course name category_id id_teacher ",
-        populate: [{
-            path: 'category_id',
-            model: CourseCategory,
-            select: "_id category_name type level "
-        },
-        {
-            path: 'id_teacher',
-            model: Teacher,
-            // select: "_id  ",
-            populate: {
-                path: 'account_id',
-                model: Account
+        .populate([{
+            path: 'id_course',
+            // select: "id_course name category_id id_teacher ",
+            populate: [{
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                // select: "_id  ",
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
             }
-        }
-        ]
-    }])
+            ]
+        }])
     // console.log({ demoCourse })
     // const demoCourseStudent = await DemoCourseStudent.findOne({ id_demo_course: req.params.id })
     // if (demoCourseStudent) {
@@ -415,11 +450,11 @@ exports.deleteDemoCourse = async (req, res, next) => {
     if (!demoCourse) res.status(404).send("The course doesn't exist")
     else {
         // const newDemoCourse = await DemoCourse.find({ id_course: demoCourse.id_course })
-        const teacher = await Teacher.findOne({account_id: req.headers.account_id})
-        console.log("teacher?", teacher? teacher:false )
+        const teacher = await Teacher.findOne({ account_id: req.headers.account_id })
+        console.log("teacher?", teacher ? teacher : false)
         let course = await Course.find({ id_teacher: teacher._id })
-          course = course.map(item => item._id) 
-          console.log("couurse:",{course})
+        course = course.map(item => item._id)
+        console.log("couurse:", { course })
         const newDemoCourse = await DemoCourse.find({ id_course: { $in: course } })
             .populate([{
                 path: 'id_course',
@@ -485,5 +520,57 @@ exports.adminDeleteDemoCourse = async (req, res, next) => {
     }
 }
 
-
+exports.deleteDemoCourseReport = async (req, res, next) => {
+    // console.log("req.headers", req.headers)
+    const demoCourse = await DemoCourse.findByIdAndUpdate(req.params.id,{
+        $set:{
+            reportedMessage:[]
+        }
+    })
+    .populate([{
+        path: 'id_course',
+        // select: "id_course name category_id id_teacher ",
+        populate: [{
+            path: 'category_id',
+            model: CourseCategory,
+            select: "_id category_name type level "
+        },
+        {
+            path: 'id_teacher',
+            model: Teacher,
+            populate: {
+                path: 'account_id',
+                model: Account
+            }
+        }
+        ]
+    }])
+    if(!demoCourse) res.status(404).send("The course doesn't exist")
+    else {
+        let course = await Course.find({ id_teacher: req.body.id_teacher })
+    course = course.map(item => item._id) 
+        // console.log("demoCourse.reportedMessage",demoCourse.reportedMessage)
+        const newDemoCourse = await DemoCourse.find({id_course:{ $in: course }})
+        .populate([{
+            path: 'id_course',
+            // select: "id_course name category_id id_teacher ",
+            populate: [{
+                path: 'category_id',
+                model: CourseCategory,
+                select: "_id category_name type level "
+            },
+            {
+                path: 'id_teacher',
+                model: Teacher,
+                populate: {
+                    path: 'account_id',
+                    model: Account
+                }
+            }
+            ]
+        }])
+        res.send(newDemoCourse)
+        console.log("newDemoCourse.length:", newDemoCourse.length)
+                }
+}
 // https://stackoverflow.com/questions/8303900/mongodb-mongoose-findmany-find-all-documents-with-ids-listed-in-array 

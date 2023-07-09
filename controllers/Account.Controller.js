@@ -43,7 +43,7 @@ exports.updateAccount = async (req, res, next) => {
 exports.updateAccountStatus = async (req, res, next) => {
     // const find= await Account.findById(req.params.id);
     //check account student dc mo khoa thi cac danh gia se tra ve 0 va false 
-    console.log("req.body.is_deleted",req.body.is_deleted)
+    console.log("req.body.is_deleted", req.body.is_deleted)
     const account = await Account.findByIdAndUpdate(req.params.id, {
         is_deleted: !req.body.is_deleted
     }, { new: true });
@@ -78,12 +78,111 @@ exports.deleteAccount = async (req, res, next) => {
             const newAccounts = await Account.find();
             console.log("newAccounts.length: ", newAccounts.length)
             res.status(200).send(newAccounts);
-           
+
         }
-       
+
     }
 
 
 }
+exports.changeSeenMessage = async (req, res, next) => {
+    console.log("req.body", req.body)
+    console.log("req.params", req.params)
+    if (req.body.seen == true) {
+        const account = await Account.findByIdAndUpdate(req.params.id, {
+            $push: {
+                seenMessage: req.body.seenMessage
+            },
+            $pull: {
+                messageFromSystem: req.body.seenMessage
+            }
+        })
 
+        if (account.role_name == 'student') {
+            const student = await Student.findOne({ account_id: req.params.id })
+            .populate([
+                {
+                    path:"account_id",
+                    model: Account
+                }
+            ])
+            res.send(student)
+            console.log("student unseen => seen mesage: ",student.account_id)
+        }
+        else {
+            const teacher = await Teacher.findOne({ account_id: req.params.id })
+            .populate([
+                {
+                    path:"account_id",
+                    model: Account
+                }
+            ])
+            res.send(teacher)
+        }
 
+        // res.send(account)
+    }
+    else {
+        const account = await Account.findByIdAndUpdate(req.params.id, {
+            $push: {
+                messageFromSystem: req.body.seenMessage
+            },
+            $pull: {
+                seenMessage: req.body.seenMessage
+            }
+        })
+
+        if (account.role_name == 'student') {
+            const student = await Student.findOne({ account_id: req.params.id })
+            .populate([
+                {
+                    path:"account_id",
+                    model: Account
+                }
+            ])
+            res.send(student)
+            console.log("student seen => unseen mesage: ",student.account_id)
+        }
+        else {
+            const teacher = await Teacher.findOne({ account_id: req.params.id })
+            .populate([
+                {
+                    path:"account_id",
+                    model: Account
+                }
+            ])
+            res.send(teacher)
+        }
+        // res.send(account)
+    }
+}
+
+exports.deleteSeenMessage = async (req, res, next) => {
+    console.log("req.body", req.body)
+    const account = await Account.findByIdAndUpdate(req.params.id, {
+        $pull: {
+            seenMessage: req.body.seenMessage
+        }
+    })
+    if(account.role_name == 'student') {
+        const student = await Student.findOne({ account_id: req.params.id })
+        .populate([
+            {
+                path:"account_id",
+                model: Account
+            }
+        ])
+        res.send(student)
+        console.log("student : ",student.account_id)
+    }
+    else {
+        const teacher = await Teacher.findOne({ account_id: req.params.id })
+        .populate([
+            {
+                path:"account_id",
+                model: Account
+            }
+        ])
+        res.send(teacher)
+    }
+}

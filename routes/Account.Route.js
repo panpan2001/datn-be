@@ -11,6 +11,10 @@ router.patch('/:id',middlewareController.verifyTokenAndAdminAuth,AccountControll
 
 router.patch('/changeStatus/:id',middlewareController.verifyUserAndAdminAuth,AccountController.updateAccountStatus)
 
+router.patch('/changeSeenMessage/:id',middlewareController.verifyUserAndAdminAuth,AccountController.changeSeenMessage)
+
+router.patch('/deleteSeenMessage/:id',middlewareController.verifyUserAndAdminAuth,AccountController.deleteSeenMessage)
+
 
 router.delete('/:id',middlewareController.verifyTokenAndAdminAuth,AccountController.deleteAccount)
 
